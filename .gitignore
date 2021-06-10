@@ -1,2 +1,6 @@
+.classpath
+.project
 .gradle
 build
+configs/generated
+log

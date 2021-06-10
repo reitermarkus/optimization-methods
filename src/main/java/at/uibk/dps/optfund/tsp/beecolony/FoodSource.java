@@ -1,3 +1,5 @@
+package at.uibk.dps.optfund.tsp.beecolony;
+
 import java.util.*;
 import java.util.stream.*;
 

@@ -1,19 +1,52 @@
-plugins {
-    id 'java'
+buildscript {
+  repositories {
+    jcenter()
+  }
 }
 
-group 'org.example'
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'jacoco'
+
+jacoco {
+  toolVersion = "0.8.5"
+}
+// to use GitHub repositories as dependencies
+
+mainClassName = 'org.opt4j.core.start.Opt4J'
+
+group 'importance'
 version '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+  mavenCentral()
+  maven {
+    name "jitpack"
+    url 'https://jitpack.io'
+  }
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+  // dependency to Opt4J
+  implementation 'com.github.FedorSmirnov89:opt4j:-SNAPSHOT'
+
+  // dependency to opendse
+  implementation 'com.github.FedorSmirnov89:opendse:-SNAPSHOT'
+
+  // test dependencies
+  testCompile group: 'junit', name: 'junit', version: '4.+'
+  testCompile group: 'org.mockito', name: 'mockito-core', version: '3.4.4'
+
+  // dependency to local files
+  // compile files('libs/lib.jar')
 }
 
-test {
-    useJUnitPlatform()
+task firefly(group: 'application') {
+  dependsOn tasks.run.args('configs/firefly_dtlz.xml')
+}
+
+task beecolony(group: 'application') {
+  dependsOn tasks.run.args('configs/beecolony_tsp.xml')
 }
