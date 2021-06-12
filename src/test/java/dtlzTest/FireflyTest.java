@@ -69,7 +69,7 @@ public class FireflyTest {
 		when(fly1.getObjectives()).thenReturn(getObjectives(1));
 		when(fly2.getObjectives()).thenReturn(getObjectives(1));
 
-		assertEquals(0, comp.compare(fly1, fly2));
+		assertEquals(-1, comp.compare(fly1, fly2));
 
 		when(fly1.getObjectives()).thenReturn(getObjectives(2));
 		when(fly2.getObjectives()).thenReturn(getObjectives(1));

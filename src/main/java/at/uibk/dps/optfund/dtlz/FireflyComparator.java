@@ -22,7 +22,7 @@ public class FireflyComparator implements Comparator<Firefly> {
 		Objectives o1 = f1.getObjectives();
 		Objectives o2 = f2.getObjectives();
 
-		if (o2.weaklyDominates(o2)) {
+		if (o2.weaklyDominates(o1)) {
 			return -1;
 		} else if (o1.weaklyDominates(o2)) {
 			return 1;
