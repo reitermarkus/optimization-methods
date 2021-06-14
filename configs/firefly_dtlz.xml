@@ -11,7 +11,7 @@
   <module class="at.uibk.dps.optfund.dtlz.FireflyAlgorithmModule">
     <property name="generations">500</property>
     <property name="populationSize">50</property>
-    <property name="alpha">0.005</property>
+    <property name="alpha">0.001</property>
     <property name="beta0">1</property>
     <property name="gamma">0.05</property>
   </module>
