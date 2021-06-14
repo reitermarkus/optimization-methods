@@ -46,8 +46,11 @@ public class Firefly extends Individual {
 	 * @return intensity value
 	 */
 	public double getIntensity() {
-		double error = this.getObjectives().getValues().stream().mapToDouble(v -> v.getDouble()).sum();
-		return 1 / (1 + error);
+		return 1 / (1 + getError());
+	}
+
+	public double getError() {
+		return this.getObjectives().getValues().stream().mapToDouble(v -> v.getDouble()).sum();
 	}
 
 	public int getId() {
@@ -56,6 +59,12 @@ public class Firefly extends Individual {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "Firefly: { id: " + this.id + ", intensity: " + this.getIntensity() + ", error: " + this.getError()
+				+ " }";
 	}
 
 }

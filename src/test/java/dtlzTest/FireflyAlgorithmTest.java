@@ -7,37 +7,43 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import org.junit.Test;
-import org.opt4j.core.Objective;
-import org.opt4j.core.Objective.Sign;
-import org.opt4j.core.Objectives;
+import org.opt4j.benchmarks.dtlz.DTLZModule;
+import org.opt4j.core.common.logger.LoggerModule;
 import org.opt4j.core.common.random.Rand;
 import org.opt4j.core.genotype.DoubleGenotype;
+import org.opt4j.core.optimizer.Population;
+import org.opt4j.core.start.Opt4JTask;
 
 import at.uibk.dps.optfund.dtlz.Firefly;
 import at.uibk.dps.optfund.dtlz.FireflyAlgorithm;
-import at.uibk.dps.optfund.dtlz.FireflyFactory;
+import at.uibk.dps.optfund.dtlz.FireflyAlgorithmModule;
 
-public class FireflyAlgorithmTest {
+/**
+ * Collection of tests for the FireflyAlgorithm class.
+ * 
+ * @author Josef Gugglberger
+ *
+ */
+public class FireflyAlgorithmTest extends AbstractFireflyTest {
 
-	private static FireflyFactory factory = mock(FireflyFactory.class);
-
-	private static int POPULATION_SIZE = 10;
-	private static Rand random = mock(Rand.class);
-	private static FireflyAlgorithm alg = spy(
-			new FireflyAlgorithm(null, factory, null, random, POPULATION_SIZE, 0, 0, 0));
-
-	protected static final Objective firstObj = new Objective("first", Sign.MAX);
-	protected static Firefly fly1 = spy(Firefly.class);
-	protected static Firefly fly2 = spy(Firefly.class);
-	protected static Firefly fly3 = spy(Firefly.class);
+	protected static int POPULATION_SIZE = 10;
 
 	protected static final DoubleGenotype gen1 = spy(DoubleGenotype.class);
 	protected static final DoubleGenotype gen2 = spy(DoubleGenotype.class);
+
+	protected static Rand random = mock(Rand.class);
+
+	protected static FireflyAlgorithm alg = spy(
+			new FireflyAlgorithm(null, factory, null, random, POPULATION_SIZE, 0, 0, 0));
 
 	@Test
 	public void initPopulationTest() {
@@ -92,12 +98,72 @@ public class FireflyAlgorithmTest {
 		assertEquals(Arrays.asList(0d), newPosition);
 	}
 
-	protected static Objectives getObjectives(int... objectives) {
-		Objectives result = new Objectives();
-		for (double obj : objectives) {
-			result.add(firstObj, obj);
+	@Test
+	public void fireflyAlgorithmTest() {
+		// setup firefly algorithm
+		FireflyAlgorithmModule fireflyAlgorithm = new FireflyAlgorithmModule();
+		fireflyAlgorithm.setGenerations(100);
+		fireflyAlgorithm.setPopulationSize(POPULATION_SIZE);
+		fireflyAlgorithm.setAlpha(0.005); // no random walk
+		fireflyAlgorithm.setBeta0(1d);
+		fireflyAlgorithm.setGamma(0.01);
+
+		// use DTLZ1 problem
+		DTLZModule dtlz = new DTLZModule();
+		dtlz.setFunction(DTLZModule.Function.DTLZ1);
+
+		// write results into file
+		LoggerModule viewer = new LoggerModule();
+		String filename = "./build/out.tsv";
+		File file = new File(filename);
+		viewer.setFilename(filename);
+
+		Opt4JTask task = new Opt4JTask(false);
+		task.init(fireflyAlgorithm, dtlz, viewer);
+
+		try {
+			task.execute();
+
+			Population population = task.getInstance(Population.class);
+			// check if population size keeps constant
+			assertEquals(POPULATION_SIZE, population.size());
+
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+				String line;
+				List<String> iterations = new ArrayList<>();
+				List<Double> objective1 = new ArrayList<>();
+				List<Double> objective2 = new ArrayList<>();
+				List<Double> objective3 = new ArrayList<>();
+				boolean first = true;
+				while ((line = br.readLine()) != null) {
+					if (first) {
+						first = !first;
+						continue;
+					}
+					String[] cols = line.split("\t");
+					iterations.add(cols[0]);
+					objective1.add(Double.valueOf(cols[3]));
+					objective2.add(Double.valueOf(cols[3]));
+					objective3.add(Double.valueOf(cols[3]));
+				}
+
+				// check number of iterations
+				assertEquals("1", iterations.get(0));
+				assertEquals("100", iterations.get(iterations.size() - 1));
+
+				// check if optimization found better solution
+				assertTrue(objective1.get(0) >= objective1.get(objective1.size() - 1));
+				assertTrue(objective2.get(0) >= objective1.get(objective2.size() - 1));
+				assertTrue(objective3.get(0) >= objective1.get(objective3.size() - 1));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			task.close();
+			// delete file again
+			file.delete();
 		}
-		return result;
 	}
 
 }
