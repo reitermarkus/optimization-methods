@@ -26,6 +26,7 @@ import org.opt4j.core.start.Opt4JTask;
 import at.uibk.dps.optfund.dtlz.Firefly;
 import at.uibk.dps.optfund.dtlz.FireflyAlgorithm;
 import at.uibk.dps.optfund.dtlz.FireflyAlgorithmModule;
+import at.uibk.dps.optfund.dtlz.FireflyFactory;
 
 /**
  * Collection of tests for the FireflyAlgorithm class.
@@ -37,11 +38,8 @@ public class FireflyAlgorithmTest extends AbstractFireflyTest {
 
 	protected static int POPULATION_SIZE = 10;
 
-	protected static final DoubleGenotype gen1 = spy(DoubleGenotype.class);
-	protected static final DoubleGenotype gen2 = spy(DoubleGenotype.class);
-
 	protected static Rand random = mock(Rand.class);
-
+	protected static FireflyFactory factory = mock(FireflyFactory.class);
 	protected static FireflyAlgorithm alg = spy(
 			new FireflyAlgorithm(null, factory, null, random, POPULATION_SIZE, 0, 0, 0));
 
@@ -61,9 +59,13 @@ public class FireflyAlgorithmTest extends AbstractFireflyTest {
 
 	@Test
 	public void sortFirefliesTest() {
-		when(fly1.getObjectives()).thenReturn(getObjectives(3));
-		when(fly2.getObjectives()).thenReturn(getObjectives(2));
-		when(fly3.getObjectives()).thenReturn(getObjectives(1));
+		Firefly fly1 = spy(Firefly.class);
+		Firefly fly2 = spy(Firefly.class);
+		Firefly fly3 = spy(Firefly.class);
+
+		fly1.setObjectives(getObjectives(3));
+		fly2.setObjectives(getObjectives(2));
+		fly3.setObjectives(getObjectives(1));
 
 		List<Firefly> population = Arrays.asList(fly1, fly2, fly3);
 
@@ -78,8 +80,14 @@ public class FireflyAlgorithmTest extends AbstractFireflyTest {
 
 	@Test
 	public void moveFireflyTest() {
-		when(fly1.getGenotype()).thenReturn(gen1);
-		when(fly2.getGenotype()).thenReturn(gen2);
+		Firefly fly1 = spy(Firefly.class);
+		Firefly fly2 = spy(Firefly.class);
+
+		DoubleGenotype gen1 = spy(DoubleGenotype.class);
+		DoubleGenotype gen2 = spy(DoubleGenotype.class);
+
+		fly1.setGenotype(gen1);
+		fly2.setGenotype(gen2);
 
 		gen1.init(new Random(), 1);
 		when(gen1.getLowerBound(0)).thenReturn(0d);
