@@ -5,12 +5,12 @@
     <property name="usingSeed">true</property>
     <property name="seed">10</property>
   </module>
-  <module class="org.opt4j.optimizers.ea.EvolutionaryAlgorithmModule">
+  <module class="at.uibk.dps.optfund.tsp.beecolony.BeeColonyOptimizerModule">
     <property name="generations">1000</property>
     <property name="populationSize">100</property>
-    <property name="parentsPerGeneration">25</property>
-    <property name="offspringsPerGeneration">25</property>
-    <property name="crossoverRate">0.95</property>
+    <property name="n">4</property>
+    <property name="lowerBound">0.1</property>
+    <property name="upperBound">0.9</property>
   </module>
   <module class="org.opt4j.tutorial.salesman.SalesmanModule">
     <property name="size">10000</property>
