@@ -5,3 +5,4 @@ build
 configs/generated
 log
 bin
+outputs

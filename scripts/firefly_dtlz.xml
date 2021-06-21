@@ -15,9 +15,11 @@
     <property name="beta0">1</property>
     <property name="gamma">0.05</property>
   </module>
-  <module class="org.opt4j.viewer.ViewerModule">
-    <property name="closeEvent">STOP</property>
-    <property name="closeOnStop">false</property>
-    <property name="title">Opt4J -SNAPSHOT Viewer</property>
+    <module class="org.opt4j.core.common.logger.LoggerModule">
+    <property name="filename">file.tsv</property>
+    <property name="loggingPerEvaluation">false</property>
+    <property name="evaluationStep">100</property>
+    <property name="loggingPerIteration">true</property>
+    <property name="iterationStep">25</property>
   </module>
 </configuration>
