@@ -1,5 +1,6 @@
 package at.uibk.dps.optfund.tsp.beecolony;
 
+import at.uibk.dps.optfund.dtlz.*;
 import org.opt4j.core.config.annotations.*;
 import org.opt4j.core.optimizer.*;
 import org.opt4j.core.start.*;
@@ -15,19 +16,24 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
   @Order(1)
   protected int populationSize;
 
+  @Constant(value = "alpha", namespace = FireflyAlgorithm.class)
+  @Info("A randomness parameter between 0 and 1.")
+  @Order(2)
+  protected double alpha;
+
   @Constant(value = "n", namespace = BeeColonyOptimizer.class)
   @Info("The size of the solution vector.")
-  @Order(2)
+  @Order(3)
   protected int n;
 
   @Constant(value = "lowerBound", namespace = BeeColonyOptimizer.class)
   @Info("The lower bounds of the solution vector.")
-  @Order(3)
+  @Order(4)
   double lowerBound;
 
   @Constant(value = "upperBound", namespace = BeeColonyOptimizer.class)
   @Info("The upper bounds of the solution vector.")
-  @Order(4)
+  @Order(5)
   double upperBound;
 
   public int getGenerations() {
