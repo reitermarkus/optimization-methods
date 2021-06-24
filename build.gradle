@@ -44,9 +44,13 @@ dependencies {
 }
 
 task firefly(group: 'application') {
-  dependsOn tasks.run.args('configs/firefly_dtlz.xml')
+  doLast {
+    tasks.run.args('configs/firefly_dtlz.xml').exec()
+  }
 }
 
 task beecolony(group: 'application') {
-  dependsOn tasks.run.args('configs/beecolony_tsp.xml')
+  doLast {
+    tasks.run.args('configs/beecolony_tsp.xml').exec()
+  }
 }
