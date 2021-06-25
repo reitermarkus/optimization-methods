@@ -16,7 +16,7 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
   @Order(1)
   protected int populationSize;
 
-  @Constant(value = "alpha", namespace = FireflyAlgorithm.class)
+  @Constant(value = "alpha", namespace = BeeColonyOptimizer.class)
   @Info("A randomness parameter between 0 and 1.")
   @Order(2)
   protected double alpha;
@@ -50,6 +50,14 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
 
   public void setPopulationSize(int populationSize) {
     this.populationSize = populationSize;
+  }
+
+  public double getAlpha() {
+    return alpha;
+  }
+
+  public void setAlpha(double alpha) {
+    this.alpha = alpha;
   }
 
   public int getN() {

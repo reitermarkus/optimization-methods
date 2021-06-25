@@ -50,7 +50,7 @@ task firefly(group: 'application') {
   dependsOn tasks.build
 
   doLast {
-    tasks.run.args('configs/firefly_dtlz.xml').exec()
+    tasks.run.args('-s', 'configs/firefly_dtlz.xml').exec()
   }
 }
 
@@ -58,6 +58,6 @@ task beecolony(group: 'application') {
   dependsOn tasks.build
 
   doLast {
-    tasks.run.args('configs/beecolony_tsp.xml').exec()
+    tasks.run.args('-s', 'configs/beecolony_tsp.xml').exec()
   }
 }
