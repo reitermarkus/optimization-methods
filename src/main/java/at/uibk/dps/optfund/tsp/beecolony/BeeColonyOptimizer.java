@@ -23,10 +23,12 @@ class BeeColonyOptimizer implements IterativeOptimizer {
   protected final List<EmployedBee> employedBees = new ArrayList<>();
   protected final List<OnlookerBee> onlookerBees = new ArrayList<>();
   protected final List<ScoutBee> scoutBees = new ArrayList<>();
+  protected final IndividualCompleter completer;
 
   @Inject
   public BeeColonyOptimizer(
     Population population,
+    IndividualCompleter completer,
     Rand random,
     @Constant(value = "populationSize", namespace = BeeColonyOptimizer.class) int populationSize,
     @Constant(value = "alpha", namespace = BeeColonyOptimizer.class) double alpha,
@@ -35,6 +37,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
     @Constant(value = "upperBound", namespace = BeeColonyOptimizer.class) double upperBound
   ) {
     this.population = population;
+    this.completer = completer;
     this.random = random;
     this.populationSize = populationSize;
     this.alpha = alpha;
@@ -64,6 +67,9 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       .collect(Collectors.toList());
 
     this.population.addAll(foodSources);
+
+    var pop = this.population.stream().map(i -> (FoodSource)i).collect(Collectors.toList());
+    System.out.println(pop.get(0).getObjectives());
   }
 
   static double objectiveFunction(FoodSource foodSource) {
@@ -82,9 +88,11 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       var randomFoodSource = foodSources.get(j);
       var newFoodSource = foodSource.generateNeighbor(randomFoodSource, random, this.alpha);
 
-      var fitness = foodSource.fitness(BeeColonyOptimizer::objectiveFunction);
-      var newFitness = newFoodSource.fitness(BeeColonyOptimizer::objectiveFunction);
-      var selectedFoodSource = newFitness > fitness ? newFoodSource : foodSource;
+      // var fitness = foodSource.fitness(BeeColonyOptimizer::objectiveFunction);
+      // var newFitness = newFoodSource.fitness(BeeColonyOptimizer::objectiveFunction);
+
+      var newFoodSourceIsBetter = newFoodSource.getObjectives().dominates(foodSource.getObjectives());
+      var selectedFoodSource = newFoodSourceIsBetter ? newFoodSource : foodSource;
 
       bee.setMemory(selectedFoodSource);
       foodSources.add(selectedFoodSource);
@@ -101,6 +109,13 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 
   @Override
   public void next() throws TerminationException {
-    System.out.println("TEST next");
+    this.completer.complete(this.population);
+
+    var pop = this.population.stream().map(i -> (FoodSource)i).collect(Collectors.toList());
+    System.out.println(pop.get(0).getObjectives());
+
+    this.employedBeesPhase();
+    this.onlookerBeesPhase();
+    this.scoutBeesPhase();
   }
 }

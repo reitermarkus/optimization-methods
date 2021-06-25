@@ -49,12 +49,16 @@ public class FireflyAlgorithm implements IterativeOptimizer {
 	 * @param gamma             absorption constant
 	 */
 	@Inject
-	public FireflyAlgorithm(Population population, IndividualFactory individualFactory, IndividualCompleter completer,
-			Rand random, @Constant(value = "populationSize", namespace = FireflyAlgorithm.class) int populationSize,
-			@Constant(value = "alpha", namespace = FireflyAlgorithm.class) double alpha,
-			@Constant(value = "beta0", namespace = FireflyAlgorithm.class) double beta0,
-			@Constant(value = "gamma", namespace = FireflyAlgorithm.class) double gamma) {
-
+	public FireflyAlgorithm(
+	  Population population,
+    IndividualFactory individualFactory,
+    IndividualCompleter completer,
+    Rand random,
+    @Constant(value = "populationSize", namespace = FireflyAlgorithm.class) int populationSize,
+    @Constant(value = "alpha", namespace = FireflyAlgorithm.class) double alpha,
+    @Constant(value = "beta0", namespace = FireflyAlgorithm.class) double beta0,
+    @Constant(value = "gamma", namespace = FireflyAlgorithm.class) double gamma
+  ) {
 		this.population = population;
 		this.individualFactory = (FireflyFactory) individualFactory;
 		this.completer = completer;
