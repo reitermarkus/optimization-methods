@@ -66,6 +66,11 @@ class BeeColonyOptimizer implements IterativeOptimizer {
     this.population.addAll(foodSources);
   }
 
+  static double objectiveFunction(FoodSource foodSource) {
+    // TODO
+    return 0;
+  }
+
   void employedBeesPhase() {
     var foodSources = this.population.stream().map(f -> (FoodSource) f).collect(Collectors.toList());
 
@@ -75,10 +80,14 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 
       var j = this.random.nextInt(foodSources.size());
       var randomFoodSource = foodSources.get(j);
-
       var newFoodSource = foodSource.generateNeighbor(randomFoodSource, random, this.alpha);
 
+      var fitness = foodSource.fitness(BeeColonyOptimizer::objectiveFunction);
+      var newFitness = newFoodSource.fitness(BeeColonyOptimizer::objectiveFunction);
+      var selectedFoodSource = newFitness > fitness ? newFoodSource : foodSource;
 
+      bee.setMemory(selectedFoodSource);
+      foodSources.add(selectedFoodSource);
     });
   }
 
