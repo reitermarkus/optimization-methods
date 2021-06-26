@@ -1,4 +1,4 @@
-package at.uibk.dps.optfund.dtlz;
+package at.uibk.dps.optfund.dtlz.firefly;
 
 import java.util.Arrays;
 import java.util.Comparator;
