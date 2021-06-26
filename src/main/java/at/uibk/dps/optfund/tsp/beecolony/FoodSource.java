@@ -1,9 +1,14 @@
 package at.uibk.dps.optfund.tsp.beecolony;
 
+import com.google.common.collect.Streams;
+import org.opt4j.core.*;
+import org.opt4j.core.common.random.*;
+
 import java.util.*;
+import java.util.function.*;
 import java.util.stream.*;
 
-public class FoodSource {
+public class FoodSource extends Individual {
   ArrayList<Double> vector;
 
   private FoodSource(ArrayList<Double> vector) {
@@ -17,17 +22,21 @@ public class FoodSource {
       .collect(Collectors.toCollection(ArrayList::new));
   }
 
-  public FoodSource neighbor(double[] phi, FoodSource otherSource) {
-    var random = new Random();
+  public FoodSource generateNeighbor(FoodSource otherSource, Rand random, double a) {
+    return new FoodSource(Streams.zip(this.vector.stream(), otherSource.vector.stream(), (m, k) -> {
+      var phi = (random.nextDouble() * 2.0 - 1.0) * a;
+      return m + phi * (m - k);
+    }).collect(Collectors.toCollection(ArrayList::new)));
+  }
 
-    var vector = IntStream.range(0, this.vector.size())
-      .mapToObj(__ -> {
-        var i = random.nextInt(this.vector.size());
-        return this.vector.get(i) + phi[i] * (this.vector.get(i) - otherSource.vector.get(i));
-      })
-      .collect(Collectors.toCollection(ArrayList::new));
+  public double fitness(Function<FoodSource, Double> objectiveFunction) {
+    var f = objectiveFunction.apply(this);
 
-    return new FoodSource(vector);
+    if (f >= 0) {
+      return 1.0 / (1 + f);
+    } else {
+      return 1.0 + Math.abs(f);
+    }
   }
 
   @Override
