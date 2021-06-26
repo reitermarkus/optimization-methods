@@ -23,10 +23,10 @@ import org.opt4j.core.genotype.DoubleGenotype;
 import org.opt4j.core.optimizer.Population;
 import org.opt4j.core.start.Opt4JTask;
 
-import at.uibk.dps.optfund.dtlz.Firefly;
-import at.uibk.dps.optfund.dtlz.FireflyAlgorithm;
-import at.uibk.dps.optfund.dtlz.FireflyAlgorithmModule;
-import at.uibk.dps.optfund.dtlz.FireflyFactory;
+import at.uibk.dps.optfund.dtlz.firefly.Firefly;
+import at.uibk.dps.optfund.dtlz.firefly.FireflyAlgorithm;
+import at.uibk.dps.optfund.dtlz.firefly.FireflyAlgorithmModule;
+import at.uibk.dps.optfund.dtlz.firefly.FireflyFactory;
 
 /**
  * Collection of tests for the FireflyAlgorithm class.

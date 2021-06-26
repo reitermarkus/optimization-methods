@@ -8,8 +8,8 @@ import java.util.Comparator;
 
 import org.junit.Test;
 
-import at.uibk.dps.optfund.dtlz.Firefly;
-import at.uibk.dps.optfund.dtlz.FireflyComparator;
+import at.uibk.dps.optfund.dtlz.firefly.Firefly;
+import at.uibk.dps.optfund.dtlz.firefly.FireflyComparator;
 
 /**
  * Collection of tests for the Firefly class.

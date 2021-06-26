@@ -1,4 +1,4 @@
-package at.uibk.dps.optfund.dtlz;
+package at.uibk.dps.optfund.dtlz.firefly;
 
 import org.opt4j.core.Individual;
 import org.opt4j.core.genotype.DoubleGenotype;

@@ -8,12 +8,12 @@
     <property name="encoding">DOUBLE</property>
     <property name="bits">30</property>
   </module>
-  <module class="at.uibk.dps.optfund.dtlz.firefly.FireflyAlgorithmModule">
-    <property name="generations">275</property>
-    <property name="populationSize">50</property>
-    <property name="alpha">0.001</property>
-    <property name="beta0">1</property>
-    <property name="gamma">0.05</property>
+  <module class="at.uibk.dps.optfund.dtlz.bee.BeeColonyOptimizerModule">
+    <property name="generations">1000</property>
+    <property name="populationSize">100</property>
+    <property name="n">4</property>
+    <property name="lowerBound">0.1</property>
+    <property name="upperBound">0.9</property>
   </module>
   <module class="org.opt4j.viewer.ViewerModule">
     <property name="closeEvent">STOP</property>
