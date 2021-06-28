@@ -32,7 +32,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 			Rand random, @Constant(value = "populationSize", namespace = BeeColonyOptimizer.class) int populationSize,
 			@Constant(value = "limitCounter", namespace = BeeColonyOptimizer.class) int limitCounter,
 			@Constant(value = "alpha", namespace = BeeColonyOptimizer.class) double alpha) {
-		this.population = population;
+		this.population = (Population) population;
 		this.individualFactory = (BeeFactory) individualFactory;
 		this.completer = completer;
 		this.random = random;
@@ -44,6 +44,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 
 	@Override
 	public void initialize() throws TerminationException {
+		// initialize half of the bees as employees, and the other half as onlookers
 		BEE_STATUS state = BEE_STATUS.EMPLOYED;
 		for (int i = 0; i < populationSize; i++) {
 			if (i > populationSize / 2) {
@@ -58,47 +59,37 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 	@Override
 	public void next() throws TerminationException {
 
-		// employer bee phase (update food sources)
+		// employee and onlooker phase
 		for (Individual ind : population) {
-			Bee employed = (Bee) ind;
-			if (employed.getBeeState() == BEE_STATUS.EMPLOYED) {
-				Bee newBee = getNeighbourPosition(employed);
-				completer.complete(newBee);
+			Bee bee = (Bee) ind;
+			Bee newBee;
+			if (bee.isEmployee()) {
+				// employees explore neighbourhood
+				newBee = getNeighbourPosition(bee);
 
-				if (newBee.getError() < employed.getError()) {
-					employed.setGenotype(newBee.getGenotype());
-				} else {
-					employed.incrementCount();
-				}
+			} else {
+				// onlookers follow a solution according to a prob.
+				Bee toFollow = rouletteWheelSelection();
+				newBee = getNeighbourPosition(toFollow);
+			}
+
+			completer.complete(newBee);
+
+			// greedy selection of fittest
+			if (newBee.getError() < bee.getError()) {
+				bee.setGenotype(newBee.getGenotype());
+			} else {
+				bee.incrementCount();
 			}
 		}
 
 		// update food sources
 		completer.complete(population);
-		double mean = getMeanFitness();
-
-		// onlooker bee phase (exploit better solutions according to a prob.)
-		for (Individual ind : population) {
-			Bee onlooker = (Bee) ind;
-			if (onlooker.getBeeState() == BEE_STATUS.ONLOOKER) {
-				Bee toFollow = rouletteWheelSelection(mean);
-				Bee newBee = getNeighbourPosition(toFollow);
-				completer.complete(newBee);
-
-				if (newBee.getError() < onlooker.getError()) {
-					onlooker.setGenotype(newBee.getGenotype());
-					;
-				} else {
-					onlooker.incrementCount();
-				}
-
-			}
-		}
 
 		// scout bee phase (generate new food sources)
 		for (Individual ind : population) {
 			Bee bee = (Bee) ind;
-			if (bee.getBeeState() == BEE_STATUS.EMPLOYED) {
+			if (bee.isEmployee()) {
 				if (bee.getCount() > this.limitCounter) {
 					Bee newBee = individualFactory.create();
 					bee.setGenotype((DoubleGenotype) newBee.getGenotype());
@@ -108,26 +99,51 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 		}
 	}
 
+	/**
+	 * Returns a randomized neighbouring position of the given bee. Parameter alpha
+	 * controlls the size of the search space around the given bee.
+	 * 
+	 * @param bee
+	 * @return
+	 */
 	private Bee getNeighbourPosition(Bee bee) {
-		DoubleGenotype position = (DoubleGenotype) bee.getGenotype();
 
 		Bee newBee = individualFactory.create();
 		DoubleGenotype newPosition = (DoubleGenotype) newBee.getGenotype();
+
 		double phi = this.alpha * rand(-1d, 1d);
+
+		DoubleGenotype position = (DoubleGenotype) bee.getGenotype();
 		for (int i = 0; i < position.size(); i++) {
 			double newPositionK = position.get(i) + phi * position.get(i);
+
+			// deal with border constraint
 			newPositionK = newPositionK < 0d ? 0d : newPositionK;
 			newPositionK = newPositionK > 1d ? 1d : newPositionK;
+
 			newPosition.set(i, newPositionK);
 		}
 
+		newBee.setBeeState(bee.getBeeState());
 		return newBee;
 	}
 
+	/**
+	 * Returns random double in interval (min,max].
+	 * 
+	 * @param min
+	 * @param max
+	 * @return
+	 */
 	private double rand(double min, double max) {
 		return random.nextDouble() * (max - min + 1) + min;
 	}
 
+	/**
+	 * Calculates average fitness of a population.
+	 * 
+	 * @return
+	 */
 	private double getMeanFitness() {
 		double mean = 0.0;
 		for (Individual ind : this.population) {
@@ -137,10 +153,15 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 		return mean / this.populationSize;
 	}
 
-	private Bee rouletteWheelSelection(double mean) {
-
-		List<Bee> bees = population.stream().map(i -> (Bee) i).filter(b -> b.getBeeState() == BEE_STATUS.EMPLOYED)
-				.collect(Collectors.toList());
+	/**
+	 * Select bee to follow based on a roulette wheel selection. Fitter bees have a
+	 * higher chance to get selected.
+	 * 
+	 * @return
+	 */
+	private Bee rouletteWheelSelection() {
+		double mean = getMeanFitness();
+		List<Bee> bees = population.stream().map(i -> (Bee) i).filter(Bee::isEmployee).collect(Collectors.toList());
 
 		double sum = bees.stream().mapToDouble(b -> b.getFitness(mean)).sum();
 

@@ -3,7 +3,7 @@ package at.uibk.dps.optfund.dtlz.bee;
 import org.opt4j.core.Individual;
 
 enum BEE_STATUS {
-	EMPLOYED, ONLOOKER, SCOUT
+	EMPLOYED, ONLOOKER
 }
 
 public class Bee extends Individual {
@@ -40,4 +40,11 @@ public class Bee extends Individual {
 		++this.count;
 	}
 
+	public boolean isEmployee() {
+		return beeState == BEE_STATUS.EMPLOYED ? true : false;
+	}
+
+	public boolean isOnlooker() {
+		return beeState == BEE_STATUS.ONLOOKER ? true : false;
+	}
 }
