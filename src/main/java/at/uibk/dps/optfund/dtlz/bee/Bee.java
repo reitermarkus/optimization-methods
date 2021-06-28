@@ -12,14 +12,12 @@ public class Bee extends Individual {
 
 	private int count;
 
-	public double getFitness(double meanFitness) {
-		double errorSum = this.getObjectives().getValues().stream().mapToDouble(v -> v.getDouble()).sum();
-		double beta = 0.1;
-		return Math.pow(Math.E, -beta * errorSum / meanFitness);
-	}
-
 	public double getError() {
 		return this.getObjectives().getValues().stream().mapToDouble(v -> v.getDouble()).sum();
+	}
+
+	public double getFitness(double meanFitness) {
+		return 1 / (1 + getError());
 	}
 
 	public BEE_STATUS getBeeState() {
