@@ -23,26 +23,23 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 	private final Rand random;
 	private final IndividualCompleter completer;
 
-	protected final int populationSize;
-	protected final int n;
-	protected final double lowerBound;
-	protected final double upperBound;
+	private final int populationSize;
+	private final int limitCounter;
+	private final double alpha;
 
 	@Inject
 	public BeeColonyOptimizer(Population population, IndividualFactory individualFactory, IndividualCompleter completer,
 			Rand random, @Constant(value = "populationSize", namespace = BeeColonyOptimizer.class) int populationSize,
-			@Constant(value = "n", namespace = BeeColonyOptimizer.class) int n,
-			@Constant(value = "lowerBound", namespace = BeeColonyOptimizer.class) double lowerBound,
-			@Constant(value = "upperBound", namespace = BeeColonyOptimizer.class) double upperBound) {
+			@Constant(value = "limitCounter", namespace = BeeColonyOptimizer.class) int limitCounter,
+			@Constant(value = "alpha", namespace = BeeColonyOptimizer.class) double alpha) {
 		this.population = population;
 		this.individualFactory = (BeeFactory) individualFactory;
 		this.completer = completer;
 		this.random = random;
 
 		this.populationSize = populationSize;
-		this.n = n;
-		this.lowerBound = lowerBound;
-		this.upperBound = upperBound;
+		this.limitCounter = limitCounter;
+		this.alpha = alpha;
 	}
 
 	@Override
@@ -70,7 +67,6 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 
 				if (newBee.getError() < employed.getError()) {
 					employed.setGenotype(newBee.getGenotype());
-					;
 				} else {
 					employed.incrementCount();
 				}
@@ -103,9 +99,9 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 		for (Individual ind : population) {
 			Bee bee = (Bee) ind;
 			if (bee.getBeeState() == BEE_STATUS.EMPLOYED) {
-				if (bee.getCount() > n) {
+				if (bee.getCount() > this.limitCounter) {
 					Bee newBee = individualFactory.create();
-					bee.setGenotype(newBee.getGenotype());
+					bee.setGenotype((DoubleGenotype) newBee.getGenotype());
 					bee.setCount(0);
 				}
 			}
@@ -114,17 +110,17 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 
 	private Bee getNeighbourPosition(Bee bee) {
 		DoubleGenotype position = (DoubleGenotype) bee.getGenotype();
-		int randK = random.nextInt(position.size());
-		double randValK = rand(position.getLowerBound(randK), position.getUpperBound(randK));
-		double phi = rand(-1d, 1d);
-		double newValue = position.get(randK) + phi * (position.get(randK) - randValK);
-		if (newValue < 0 || newValue > 1) {
-			newValue = rand(0d, 1d);
+
+		Bee newBee = individualFactory.create();
+		DoubleGenotype newPosition = (DoubleGenotype) newBee.getGenotype();
+		double phi = this.alpha * rand(-1d, 1d);
+		for (int i = 0; i < position.size(); i++) {
+			double newPositionK = position.get(i) + phi * position.get(i);
+			newPositionK = newPositionK < 0d ? 0d : newPositionK;
+			newPositionK = newPositionK > 1d ? 1d : newPositionK;
+			newPosition.set(i, newPositionK);
 		}
 
-		Bee newBee = individualFactory.create(position);
-		DoubleGenotype newPosition = (DoubleGenotype) newBee.getGenotype();
-		newPosition.set(randK, newValue);
 		return newBee;
 	}
 

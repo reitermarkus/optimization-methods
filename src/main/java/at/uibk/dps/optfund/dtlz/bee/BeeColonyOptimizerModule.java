@@ -18,20 +18,15 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
 	@Order(1)
 	protected int populationSize;
 
-	@Constant(value = "n", namespace = BeeColonyOptimizer.class)
-	@Info("The size of the solution vector.")
+	@Constant(value = "limitCounter", namespace = BeeColonyOptimizer.class)
+	@Info("The abandonment limit counter.")
 	@Order(2)
-	protected int n;
+	protected int limitCounter;
 
-	@Constant(value = "lowerBound", namespace = BeeColonyOptimizer.class)
+	@Constant(value = "alpha", namespace = BeeColonyOptimizer.class)
 	@Info("The lower bounds of the solution vector.")
 	@Order(3)
-	double lowerBound;
-
-	@Constant(value = "upperBound", namespace = BeeColonyOptimizer.class)
-	@Info("The upper bounds of the solution vector.")
-	@Order(4)
-	double upperBound;
+	double alpha;
 
 	public int getGenerations() {
 		return generations;
@@ -49,28 +44,20 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
 		this.populationSize = populationSize;
 	}
 
-	public int getN() {
-		return n;
+	public int getLimitCounter() {
+		return limitCounter;
 	}
 
-	public void setN(int n) {
-		this.n = n;
+	public void setLimitCounter(int limitCounter) {
+		this.limitCounter = limitCounter;
 	}
 
-	public double getLowerBound() {
-		return lowerBound;
+	public double getAlpha() {
+		return alpha;
 	}
 
-	public void setLowerBound(double lowerBound) {
-		this.lowerBound = lowerBound;
-	}
-
-	public double getUpperBound() {
-		return upperBound;
-	}
-
-	public void setUpperBound(double upperBound) {
-		this.upperBound = upperBound;
+	public void setAlpha(double alpha) {
+		this.alpha = alpha;
 	}
 
 	@Override
