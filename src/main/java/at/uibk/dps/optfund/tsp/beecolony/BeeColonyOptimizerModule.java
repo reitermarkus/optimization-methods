@@ -21,21 +21,6 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
   @Order(2)
   protected double alpha;
 
-  @Constant(value = "n", namespace = BeeColonyOptimizer.class)
-  @Info("The size of the solution vector.")
-  @Order(3)
-  protected int n;
-
-  @Constant(value = "lowerBound", namespace = BeeColonyOptimizer.class)
-  @Info("The lower bounds of the solution vector.")
-  @Order(4)
-  double lowerBound;
-
-  @Constant(value = "upperBound", namespace = BeeColonyOptimizer.class)
-  @Info("The upper bounds of the solution vector.")
-  @Order(5)
-  double upperBound;
-
   public int getGenerations() {
     return generations;
   }
@@ -58,30 +43,6 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
 
   public void setAlpha(double alpha) {
     this.alpha = alpha;
-  }
-
-  public int getN() {
-    return n;
-  }
-
-  public void setN(int n) {
-    this.n = n;
-  }
-
-  public double getLowerBound() {
-    return lowerBound;
-  }
-
-  public void setLowerBound(double lowerBound) {
-    this.lowerBound = lowerBound;
-  }
-
-  public double getUpperBound() {
-    return upperBound;
-  }
-
-  public void setUpperBound(double upperBound) {
-    this.upperBound = upperBound;
   }
 
   @Override

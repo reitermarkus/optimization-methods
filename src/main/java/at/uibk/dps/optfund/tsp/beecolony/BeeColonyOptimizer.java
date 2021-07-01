@@ -4,19 +4,18 @@ import java.util.*;
 import java.util.stream.*;
 
 import com.google.inject.*;
+import org.opt4j.core.*;
 import org.opt4j.core.common.random.*;
 import org.opt4j.core.optimizer.*;
 import org.opt4j.core.start.*;
 
 class BeeColonyOptimizer implements IterativeOptimizer {
   private final Population population;
+  private final FoodSourceFactory foodSourceFactory;
   protected final Rand random;
 
   protected final int populationSize;
   protected final double alpha;
-  protected final int n;
-  protected final double[] lowerBounds;
-  protected final double[] upperBounds;
 
   protected final List<EmployedBee> employedBees = new ArrayList<>();
   protected final List<OnlookerBee> onlookerBees = new ArrayList<>();
@@ -26,48 +25,34 @@ class BeeColonyOptimizer implements IterativeOptimizer {
   @Inject
   public BeeColonyOptimizer(
     Population population,
+    IndividualFactory individualFactory,
     IndividualCompleter completer,
     Rand random,
     @Constant(value = "populationSize", namespace = BeeColonyOptimizer.class) int populationSize,
-    @Constant(value = "alpha", namespace = BeeColonyOptimizer.class) double alpha,
-    @Constant(value = "n", namespace = BeeColonyOptimizer.class) int n,
-    @Constant(value = "lowerBound", namespace = BeeColonyOptimizer.class) double lowerBound,
-    @Constant(value = "upperBound", namespace = BeeColonyOptimizer.class) double upperBound
+    @Constant(value = "alpha", namespace = BeeColonyOptimizer.class) double alpha
   ) {
     this.population = population;
+    this.foodSourceFactory = (FoodSourceFactory)individualFactory;
     this.completer = completer;
     this.random = random;
     this.populationSize = populationSize;
     this.alpha = alpha;
-    this.n = n;
-    this.lowerBounds = DoubleStream.generate(() -> lowerBound).limit(n).toArray();
-    this.upperBounds = DoubleStream.generate(() -> upperBound).limit(n).toArray();
-  }
-
-  public static void main(String[] args) {
-    // var optimizer = new BeeColonyOptimizer();
-
-    // optimizer.optimize(13, 4, new double[] {0, 0, 0, 0}, new double[] {1, 1, 1, 1});
-  }
-
-  void optimize(int populationSize, int n, double[] lowerBounds, double[] upperBounds) {
-    var a = 1.0;
-    var random = new Random();
-    // var newSource = foodSources.get(0).neighbor(phi, foodSources.get(1));
-
-    // System.out.println(newSource);
   }
 
   @Override
   public void initialize() throws TerminationException {
-    var foodSources = Stream.generate(() -> new FoodSource(this.n, this.lowerBounds, this.upperBounds))
-      .limit(this.populationSize)
-      .collect(Collectors.toList());
+    Stream.generate(() -> foodSourceFactory.create()).limit(this.populationSize).forEach(foodSource -> {
+      this.population.add(foodSource);
+    });
 
-    this.population.addAll(foodSources);
+    this.completer.complete(this.population);
 
     var pop = this.population.stream().map(i -> (FoodSource)i).collect(Collectors.toList());
-    System.out.println(pop.get(0).getObjectives());
+    var foodSource = pop.get(0);
+    System.out.println("genotype: " + foodSource.getGenotype());
+    System.out.println("phenotype: " + foodSource.getPhenotype());
+    System.out.println("objectives: " + foodSource.getObjectives());
+
   }
 
   static double objectiveFunction(FoodSource foodSource) {
@@ -109,8 +94,6 @@ class BeeColonyOptimizer implements IterativeOptimizer {
   public void next() throws TerminationException {
     this.completer.complete(this.population);
 
-    var pop = this.population.stream().map(i -> (FoodSource)i).collect(Collectors.toList());
-    System.out.println(pop.get(0).getObjectives());
 
     this.employedBeesPhase();
     this.onlookerBeesPhase();

@@ -33,16 +33,6 @@ public class FoodSource extends Individual {
     }).collect(Collectors.toCollection(ArrayList::new)));
   }
 
-  public double fitness(Function<FoodSource, Double> objectiveFunction) {
-    var f = objectiveFunction.apply(this);
-
-    if (f >= 0) {
-      return 1.0 / (1 + f);
-    } else {
-      return 1.0 + Math.abs(f);
-    }
-  }
-
   @Override
   public String toString() {
     return "FoodSource" + vector;
