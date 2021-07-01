@@ -1,10 +1,8 @@
 package at.uibk.dps.optfund.tsp.beecolony;
 
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.*;
+import java.util.stream.*;
 
-import at.uibk.dps.optfund.dtlz.*;
 import com.google.inject.*;
 import org.opt4j.core.common.random.*;
 import org.opt4j.core.optimizer.*;

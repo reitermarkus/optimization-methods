@@ -1,6 +1,6 @@
 package at.uibk.dps.optfund.tsp.beecolony;
 
-import at.uibk.dps.optfund.dtlz.*;
+import org.opt4j.core.*;
 import org.opt4j.core.config.annotations.*;
 import org.opt4j.core.optimizer.*;
 import org.opt4j.core.start.*;
@@ -87,5 +87,6 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
   @Override
   protected void config() {
     bindIterativeOptimizer(BeeColonyOptimizer.class);
+    bind(IndividualFactory.class).to(FoodSourceFactory.class);
   }
 }

@@ -1,6 +1,7 @@
 package at.uibk.dps.optfund.tsp.beecolony;
 
 import com.google.common.collect.Streams;
+import com.google.inject.*;
 import org.opt4j.core.*;
 import org.opt4j.core.common.random.*;
 
@@ -14,6 +15,9 @@ public class FoodSource extends Individual {
   private FoodSource(ArrayList<Double> vector) {
     this.vector = vector;
   }
+
+  @Inject
+  FoodSource() {}
 
   FoodSource(int n, double[] lowerBounds, double[] upperBounds) {
     var random = new Random();
