@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.stream.*;
 
 import com.google.inject.*;
+import org.apache.commons.math3.distribution.*;
+import org.apache.commons.math3.util.Pair;
 import org.opt4j.core.*;
 import org.opt4j.core.common.random.*;
 import org.opt4j.core.optimizer.*;
@@ -45,6 +47,8 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       this.population.add(foodSource);
     });
 
+    /*
+
     this.completer.complete(this.population);
 
     var pop = this.population.stream().map(i -> (FoodSource)i).collect(Collectors.toList());
@@ -53,11 +57,14 @@ class BeeColonyOptimizer implements IterativeOptimizer {
     System.out.println("phenotype: " + foodSource.getPhenotype());
     System.out.println("objectives: " + foodSource.getObjectives());
 
+    */
   }
 
-  static double objectiveFunction(FoodSource foodSource) {
-    // TODO
-    return 0;
+  FoodSource generateRandomFoodSource(FoodSource foodSource, List<FoodSource> foodSources) {
+    var i = this.random.nextInt(foodSources.size());
+    var randomFoodSource = foodSources.get(i);
+
+    return foodSource.generateNeighbor(randomFoodSource, random, this.alpha, this.foodSourceFactory);
   }
 
   void employedBeesPhase() {
@@ -67,12 +74,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       var foodSource = bee.getMemory();
       foodSources.remove(foodSource);
 
-      var j = this.random.nextInt(foodSources.size());
-      var randomFoodSource = foodSources.get(j);
-      var newFoodSource = foodSource.generateNeighbor(randomFoodSource, random, this.alpha);
-
-      // var fitness = foodSource.fitness(BeeColonyOptimizer::objectiveFunction);
-      // var newFitness = newFoodSource.fitness(BeeColonyOptimizer::objectiveFunction);
+      var newFoodSource = this.generateRandomFoodSource(foodSource, foodSources);
 
       var newFoodSourceIsBetter = newFoodSource.getObjectives().dominates(foodSource.getObjectives());
       var selectedFoodSource = newFoodSourceIsBetter ? newFoodSource : foodSource;
@@ -80,10 +82,46 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       bee.setMemory(selectedFoodSource);
       foodSources.add(selectedFoodSource);
     });
+
+    this.population.clear();
+    this.population.addAll(foodSources);
   }
 
   void onlookerBeesPhase () {
+    var foodSources = this.employedBees.stream().map(bee -> bee.getMemory()).collect(Collectors.toList());
 
+    if (foodSources.isEmpty()) {
+      return;
+    }
+
+    var fitnesses = foodSources.stream().map(foodSource -> foodSource.fitness()).collect(Collectors.toList());
+    var totalFitness = fitnesses.stream().mapToDouble(d -> d).sum();
+
+    EnumeratedDistribution<FoodSource> distribution = new EnumeratedDistribution(IntStream.range(0, foodSources.size()).mapToObj(i -> {
+      var probability = fitnesses.get(i) / totalFitness;
+      return new Pair(foodSources.get(i), probability);
+    }).collect(Collectors.toList()));
+
+    var newEmployedBees = this.onlookerBees.stream().map(bee -> {
+      var chosenFoodSource = distribution.sample();
+      var newFoodSource = this.generateRandomFoodSource(chosenFoodSource, foodSources);
+
+      var newFoodSourceIsBetter = newFoodSource.getObjectives().dominates(chosenFoodSource.getObjectives());
+
+      var newBee = new EmployedBee();
+
+      if (newFoodSourceIsBetter) {
+        this.population.add(newFoodSource);
+        newBee.setMemory(newFoodSource);
+      } else {
+        newBee.setMemory(chosenFoodSource);
+      }
+
+      return newBee;
+    }).collect(Collectors.toList());
+
+    this.employedBees.addAll(newEmployedBees);
+    this.onlookerBees.clear();
   }
 
   void scoutBeesPhase() {
@@ -92,8 +130,9 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 
   @Override
   public void next() throws TerminationException {
-    this.completer.complete(this.population);
+    System.out.println("next");
 
+    this.completer.complete(this.population);
 
     this.employedBeesPhase();
     this.onlookerBeesPhase();
