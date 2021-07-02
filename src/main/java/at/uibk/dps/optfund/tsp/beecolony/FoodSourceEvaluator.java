@@ -18,7 +18,7 @@ public class FoodSourceEvaluator implements Evaluator<DoubleString> {
     return objectives;
   }
 
-  private double fitness(double f) {
+  static private double fitness(double f) {
     if (f >= 0) {
       return 1.0 / (1 + f);
     } else {

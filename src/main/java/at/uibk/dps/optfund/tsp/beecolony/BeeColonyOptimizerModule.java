@@ -21,6 +21,11 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
   @Order(2)
   protected double alpha;
 
+  @Constant(value = "limit", namespace = BeeColonyOptimizer.class)
+  @Info("Number of trials after employed bees become scouts again after not finding a better food source.")
+  @Order(3)
+  protected int limit;
+
   public int getGenerations() {
     return generations;
   }
@@ -43,6 +48,14 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
 
   public void setAlpha(double alpha) {
     this.alpha = alpha;
+  }
+
+  public int getLimit() {
+    return limit;
+  }
+
+  public void setLimit(int limit) {
+    this.limit = limit;
   }
 
   @Override

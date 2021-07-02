@@ -20,13 +20,11 @@ public class FoodSourceFactory extends AbstractIndividualFactory<FoodSource> {
 
   @Override
   public FoodSource create() {
-    System.out.println("Creating food source.");
     return (FoodSource)super.create();
   }
 
   @Override
   public FoodSource create(Genotype genotype) {
-    System.out.println("Creating food source with genotype.");
     return (FoodSource)super.create(genotype);
   }
 }

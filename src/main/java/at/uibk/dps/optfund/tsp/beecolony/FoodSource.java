@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.stream.*;
 
 public class FoodSource extends Individual {
+  private int limit;
+
   private FoodSource(DoubleString genotype) {
     super();
     this.setGenotype(genotype);
@@ -38,5 +40,13 @@ public class FoodSource extends Individual {
 
   public double fitness() {
     return this.getObjectives().get(new Objective("fitness", Sign.MIN)).getDouble();
+  }
+
+  public int getLimit() {
+    return this.limit;
+  }
+
+  public void isStillTheBestEver() {
+    this.limit++;
   }
 }

@@ -8,6 +8,8 @@
   <module class="at.uibk.dps.optfund.tsp.beecolony.BeeColonyOptimizerModule">
     <property name="generations">1000</property>
     <property name="populationSize">100</property>
+    <property name="alpha">0.1</property>
+    <property name="limit">3</property>
   </module>
   <module class="at.uibk.dps.optfund.tsp.beecolony.BeeColonyProblemModule">
     <property name="n">4</property>
