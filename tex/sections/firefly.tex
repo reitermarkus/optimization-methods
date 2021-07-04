@@ -2,15 +2,15 @@
 
 The firefly algorithm is a nature-inspired, meta-heuristic optimisation
 algorithm. The algorithm, presented by Yang et al., is derived from the
-flashing behavior of fireflies. We will not go into biological details of this
+flashing behaviour of fireflies. We will not go into biological details of this
 phenomena, but instead will focus on the simplified set of rules that
 artificial fireflies follow, as presented in \cite{firefly}. First, any firefly
 is attracted by any other firefly. Second, the attraction depends on the
 brightness of the fireflies, and last, the attraction decreases with increasing
 distance.  Each firefly represents one solution to the optimisation problem. We
-initialize the fireflies randomly over the search space. The brightness of a
+initialise the fireflies randomly over the search space. The brightness of a
 firefly is determined by the firefly's error (or its reciprocal, depending if
-we seek for maximization or minimization). At each iteration each firefly
+we seek for maximisation or minimisation). At each iteration each firefly
 moves a little step into the direction of each other firefly that has a higher
 brightness. The formula of the movement is given as:
 
@@ -20,13 +20,13 @@ brightness. The formula of the movement is given as:
 
 where $\mathbf{x_i}$ is the current position, $\beta_0$ is the attractiveness
 at distance 0, $\gamma$ is the absorption coefficient, $r_{ij}$ is the distance
-between the two fireflies, $\alpha$ is a randomization parameter, and $rand$ a
+between the two fireflies, $\alpha$ is a randomisation parameter, and $rand$ a
 random number between 0 and 1.
 
 \subsection{Experiments}
 
 In this section we compare our implementation of the firefly algorithm to the
-reference evolutionary algorithm. For our tests we initialized 50 fireflies and
+reference evolutionary algorithm. For our tests we initialised 50 fireflies and
 optimise over 275 iterations. We used following parameters for all experiments:
 $\alpha = 0.001$, $\beta_0 = 1$, and $\gamma = 0.05$.
 
@@ -66,7 +66,7 @@ algorithm, the number of evaluations is not constant in each iteration.
   \begin{subfigure}{.5\textwidth}
     \centering
     \includegraphics[width=0.75\linewidth]{assets/firefly.png}
-    \caption{Error over iterations over using the firfely algorithm.}
+    \caption{Error over iterations over using the firefly algorithm.}
     \label{fig:sub2}
   \end{subfigure}
   \caption{Comparison of firefly and evolutionary algorithm on the DTLZ1 problem. \ref{tab:firefly_vs_ea}.}
