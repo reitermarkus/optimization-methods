@@ -4,6 +4,9 @@ import com.google.inject.*;
 import org.opt4j.core.*;
 import org.opt4j.core.problem.*;
 
+/**
+ * Factory class, used to construct {@link FoodSource}s.
+ */
 @Singleton
 public class FoodSourceFactory extends AbstractIndividualFactory<FoodSource> {
   /**
@@ -21,7 +24,7 @@ public class FoodSourceFactory extends AbstractIndividualFactory<FoodSource> {
   /**
    * Create a new {@link FoodSource}, initialized with a random {@link Genotype}.
    *
-   * @return {@link FoodSource}
+   * @return a food source
    */
   @Override
   public FoodSource create() {
@@ -32,7 +35,7 @@ public class FoodSourceFactory extends AbstractIndividualFactory<FoodSource> {
    * Create a new {@link FoodSource} with a given {@link Genotype}.
    *
    * @param genotype a genotype
-   * @return {@link FoodSource}
+   * @return         a food source
    */
   @Override
   public FoodSource create(Genotype genotype) {

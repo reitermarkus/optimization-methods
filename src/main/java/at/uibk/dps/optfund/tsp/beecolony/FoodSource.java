@@ -16,23 +16,33 @@ public class FoodSource extends Individual {
 
   private int abandonmentCounter;
 
-  private FoodSource(DoubleString genotype) {
+  /**
+   * Construct a new {@link FoodSource} with a given {@link Genotype}.
+   *
+   * @param genotype the food source's genotype.
+   */
+  @Inject
+  FoodSource(DoubleString genotype) {
     super();
     this.setGenotype(genotype);
   }
-
-  @Inject
-  FoodSource() {}
 
   @Override
   public DoubleString getGenotype() {
     return (DoubleString)super.getGenotype();
   }
 
-
-  // Generate a new food source location by adding/subtracting a random offset
-  // (between `-a` and `a`) in the direction of another food source.
-  // See http://www.scholarpedia.org/article/Artificial_bee_colony_algorithm#Eq-6.
+  /**
+   * Generate a new {@link FoodSource} location by adding/subtracting a random offset
+   * (between `-a` and `a`) in the direction of another food source.
+   * See http://www.scholarpedia.org/article/Artificial_bee_colony_algorithm#Eq-6.
+   *
+   * @param otherSource another food source, used for specifying the direction
+   * @param random      a random number generator
+   * @param a           a number, specifying the distance bound
+   * @param factory     a food source factory
+   * @return            a food source
+   */
   public FoodSource generateNeighbor(FoodSource otherSource, Rand random, double a, FoodSourceFactory factory) {
     var locationA = this.getGenotype().stream();
     var locationB = otherSource.getGenotype().stream();
@@ -45,17 +55,28 @@ public class FoodSource extends Individual {
     return factory.create(newLocation);
   }
 
-  // Get the food source's fitness value.
+  /**
+   * Get the food source's fitness value.
+   *
+   * @return the fitness
+   */
   public double fitness() {
     return this.getObjectives().get(FITNESS).getDouble();
   }
 
-  // Determine whether the food source should be abandoned, based on a given limit.
+  /**
+   * Determine whether the food source should be abandoned, based on a given limit.
+   *
+   * @param limit the limit after which a food source should be abandoned
+   * @return whether or not the food source should be abandoned
+   */
   public boolean shouldBeAbandoned(int limit) {
     return this.abandonmentCounter > limit;
   }
 
-  // Mark the food source for abandonment, increasing its abandonment counter.
+  /**
+   * Mark the food source for abandonment, increasing its abandonment counter.
+   */
   public void markForAbandonment() {
     this.abandonmentCounter++;
   }

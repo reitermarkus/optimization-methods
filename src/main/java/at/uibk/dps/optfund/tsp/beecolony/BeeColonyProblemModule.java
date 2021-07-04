@@ -5,6 +5,10 @@ import org.opt4j.core.config.annotations.*;
 import org.opt4j.core.problem.*;
 import org.opt4j.core.start.*;
 
+/**
+ * Module for the Artificial Bee Colony problem.
+ */
+@Info("Artificial Bee Colony Problem")
 public class BeeColonyProblemModule extends ProblemModule {
   @Info("The size of the solution vector.")
   @Constant(value = "n")

@@ -22,7 +22,7 @@ public class BeeColonyOptimizerModule extends OptimizerModule {
   protected double alpha;
 
   @Constant(value = "limit", namespace = BeeColonyOptimizer.class)
-  @Info("Number of trials after employed bees become scouts again after not finding a better food source.")
+  @Info("Number of trials after which employed bees become scouts again after not finding a better food source.")
   @Order(3)
   protected int limit;
 
