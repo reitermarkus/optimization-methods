@@ -1,13 +1,13 @@
 \section{Firefly Algorithm}
 
-The firefly algorithm is a nature-inspired, meta-heuristic optimization
+The firefly algorithm is a nature-inspired, meta-heuristic optimisation
 algorithm. The algorithm, presented by Yang et al., is derived from the
 flashing behavior of fireflies. We will not go into biological details of this
 phenomena, but instead will focus on the simplified set of rules that
 artificial fireflies follow, as presented in \cite{firefly}. First, any firefly
 is attracted by any other firefly. Second, the attraction depends on the
 brightness of the fireflies, and last, the attraction decreases with increasing
-distance.  Each firefly represents one solution to the optimization problem. We
+distance.  Each firefly represents one solution to the optimisation problem. We
 initialize the fireflies randomly over the search space. The brightness of a
 firefly is determined by the firefly's error (or its reciprocal, depending if
 we seek for maximization or minimization). At each iteration each firefly
@@ -27,7 +27,7 @@ random number between 0 and 1.
 
 In this section we compare our implementation of the firefly algorithm to the
 reference evolutionary algorithm. For our tests we initialized 50 fireflies and
-optimize over 275 iterations. We used following parameters for all experiments:
+optimise over 275 iterations. We used following parameters for all experiments:
 $\alpha = 0.001$, $\beta_0 = 1$, and $\gamma = 0.05$.
 
 As table \ref{tab:firefly_vs_ea} and figure \ref{fig:firefly_vs_ea} are
@@ -51,7 +51,7 @@ algorithm, the number of evaluations is not constant in each iteration.
      Reference Evolutionary Algorithm & $3003.58 \pm 87.35$ & 250000 & 24.53 \\
      \hline
   \end{tabular}
-  \caption{Minimal errors after the given number of evaluations produced by optimizers on the DTLZ1 problem. Results are averaged over 10 subsequent runs.}
+  \caption{Minimal errors after the given number of evaluations produced by optimisers on the DTLZ1 problem. Results are averaged over 10 subsequent runs.}
   \label{tab:firefly_vs_ea}
 \end{table}
 
