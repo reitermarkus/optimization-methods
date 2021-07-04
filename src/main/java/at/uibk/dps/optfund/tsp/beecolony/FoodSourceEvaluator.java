@@ -1,24 +1,23 @@
 package at.uibk.dps.optfund.tsp.beecolony;
 
-import org.opt4j.benchmarks.*;
-import org.opt4j.core.*;
-import org.opt4j.core.Objective.Sign;
-import org.opt4j.core.genotype.*;
-import org.opt4j.core.problem.*;
-
-import java.util.function.*;
+import org.opt4j.benchmarks.DoubleString;
+import org.opt4j.core.Objectives;
+import org.opt4j.core.problem.Evaluator;
 
 public class FoodSourceEvaluator implements Evaluator<DoubleString> {
+  // Evaluate a food source's fitness objective.
   @Override
   public Objectives evaluate(DoubleString phenotype) {
+    // Objective function: Sum of squares.
     double f = phenotype.stream().mapToDouble(d -> d * d).sum();
 
     var objectives = new Objectives();
-    objectives.add("fitness", Sign.MIN, this.fitness(f));
+    objectives.add(FoodSource.FITNESS, this.fitness(f));
     return objectives;
   }
 
-  static private double fitness(double f) {
+  // Calculate the fitness for a given objective function value `f`.
+  private double fitness(double f) {
     if (f >= 0) {
       return 1.0 / (1 + f);
     } else {

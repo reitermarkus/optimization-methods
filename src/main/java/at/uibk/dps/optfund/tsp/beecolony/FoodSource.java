@@ -11,7 +11,10 @@ import java.util.*;
 import java.util.stream.*;
 
 public class FoodSource extends Individual {
-  private int limit;
+  // The name of the `fitness` minimization objective.
+  static Objective FITNESS = new Objective("fitness", Sign.MIN);
+
+  private int abandonmentCounter;
 
   private FoodSource(DoubleString genotype) {
     super();
@@ -26,6 +29,10 @@ public class FoodSource extends Individual {
     return (DoubleString)super.getGenotype();
   }
 
+
+  // Generate a new food source location by adding/subtracting a random offset
+  // (between `-a` and `a`) in the direction of another food source.
+  // See http://www.scholarpedia.org/article/Artificial_bee_colony_algorithm#Eq-6.
   public FoodSource generateNeighbor(FoodSource otherSource, Rand random, double a, FoodSourceFactory factory) {
     var locationA = this.getGenotype().stream();
     var locationB = otherSource.getGenotype().stream();
@@ -38,16 +45,19 @@ public class FoodSource extends Individual {
     return factory.create(newLocation);
   }
 
+  // Get the food source's fitness value.
   public double fitness() {
-    return this.getObjectives().get(new Objective("fitness", Sign.MIN)).getDouble();
+    return this.getObjectives().get(FITNESS).getDouble();
   }
 
-  public int getLimit() {
-    return this.limit;
+  // Determine whether the food source should be abandoned, based on a given limit.
+  public boolean shouldBeAbandoned(int limit) {
+    return this.abandonmentCounter > limit;
   }
 
-  public void isStillTheBestEver() {
-    this.limit++;
+  // Mark the food source for abandonment, increasing its abandonment counter.
+  public void markForAbandonment() {
+    this.abandonmentCounter++;
   }
 
   @Override

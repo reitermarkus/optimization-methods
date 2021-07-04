@@ -18,11 +18,22 @@ public class FoodSourceFactory extends AbstractIndividualFactory<FoodSource> {
     super(individualProvider, creator);
   }
 
+  /**
+   * Create a new {@link FoodSource}, initialized with a random {@link Genotype}.
+   *
+   * @return {@link FoodSource}
+   */
   @Override
   public FoodSource create() {
     return (FoodSource)super.create();
   }
 
+  /**
+   * Create a new {@link FoodSource} with a given {@link Genotype}.
+   *
+   * @param genotype a genotype
+   * @return {@link FoodSource}
+   */
   @Override
   public FoodSource create(Genotype genotype) {
     return (FoodSource)super.create(genotype);

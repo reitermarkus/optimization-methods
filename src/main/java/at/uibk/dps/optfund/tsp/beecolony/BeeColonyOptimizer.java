@@ -4,12 +4,10 @@ import java.util.*;
 import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
-import at.uibk.dps.optfund.dtlz.bee.*;
 import com.google.inject.*;
 import org.apache.commons.math3.distribution.*;
 import org.apache.commons.math3.util.Pair;
 import org.opt4j.core.*;
-import org.opt4j.core.common.completer.*;
 import org.opt4j.core.common.random.*;
 import org.opt4j.core.optimizer.*;
 import org.opt4j.core.start.*;
@@ -62,7 +60,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       var randomFoodSource = foodSources.get(i);
 
       if (foodSource != randomFoodSource) {
-        return foodSource.generateNeighbor(randomFoodSource, random, this.alpha, this.foodSourceFactory);
+        return foodSource.generateNeighbor(randomFoodSource, this.random, this.alpha, this.foodSourceFactory);
       }
     }
   }
@@ -94,20 +92,21 @@ class BeeColonyOptimizer implements IterativeOptimizer {
     }
   }
 
+
   private void findBetterFoodSource(Bee bee, List<FoodSource> foodSources) throws TerminationException {
     var foodSource = bee.getMemory();
 
     var newFoodSource = this.generateRandomFoodSource(foodSource, foodSources);
     this.completer.complete(newFoodSource);
 
-    var newFoodSourceIsBetter = newFoodSource.getObjectives().dominates(foodSource.getObjectives());
-
-    if (newFoodSourceIsBetter) {
+    // If the new food source if better, memorize the new one and forget the old one.
+    // If the old one is better, increase its abandonment counter.
+    if (newFoodSource.getObjectives().dominates(foodSource.getObjectives())) {
       bee.setMemory(newFoodSource);
       this.population.remove(foodSource);
       this.population.add(newFoodSource);
     } else {
-      foodSource.isStillTheBestEver();
+      foodSource.markForAbandonment();
     }
   }
 
@@ -118,7 +117,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       // If the abandonment limit for a food source is reached,
       // remove the old food source from the population and
       // scout for a random new food source.
-      if (foodSource.getLimit() > this.limit) {
+      if (foodSource.shouldBeAbandoned(this.limit)) {
         var newFoodSource = foodSourceFactory.create();
         bee.setMemory(newFoodSource);
         this.population.remove(foodSource);
