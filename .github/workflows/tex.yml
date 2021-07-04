@@ -1,0 +1,33 @@
+name: TeX
+
+on:
+  push:
+    paths:
+      - "tex/**"
+      - ".github/workflows/tex.yml"
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  tex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check Spelling
+        uses: reitermarkus/aspell@master
+        with:
+          files: tex/**/*.tex
+          args: --mode tex --personal ./tex/aspell.en_GB.pws --per-conf=./tex/aspell.conf
+      - name: Compile Paper
+        uses: reitermarkus/latexmk@master
+      - name: Prepare Paper for Publishing
+        run: |
+          mkdir -p tex/gh-pages
+          mv tex/*.pdf tex/gh-pages/
+      - name: Publish Paper
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          BRANCH: gh-pages
+          FOLDER: tex/gh-pages
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
