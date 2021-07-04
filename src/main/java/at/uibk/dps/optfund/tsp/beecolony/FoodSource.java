@@ -49,4 +49,26 @@ public class FoodSource extends Individual {
   public void isStillTheBestEver() {
     this.limit++;
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(this.getGenotype());
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    if (this == other) {
+      return true;
+    }
+
+    if (other == null) {
+      return false;
+    }
+
+    if (this.getClass() != other.getClass()) {
+      return false;
+    }
+
+    return this.getGenotype().equals(((FoodSource)other).getGenotype());
+  }
 }

@@ -1,6 +1,7 @@
 package at.uibk.dps.optfund.tsp.beecolony;
 
 import java.util.*;
+import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
 import at.uibk.dps.optfund.dtlz.bee.*;
@@ -44,10 +45,6 @@ class BeeColonyOptimizer implements IterativeOptimizer {
     this.limit = limit;
   }
 
-  private SequentialIndividualCompleter getCompleter() {
-    return (SequentialIndividualCompleter)this.completer;
-  }
-
   @Override
   public void initialize() throws TerminationException {
     this.onlookerBees = Stream.generate(() -> new Bee()).limit(this.populationSize / 2).collect(Collectors.toList());
@@ -60,121 +57,103 @@ class BeeColonyOptimizer implements IterativeOptimizer {
   }
 
   FoodSource generateRandomFoodSource(FoodSource foodSource, List<FoodSource> foodSources) {
-    var i = this.random.nextInt(foodSources.size());
-    var randomFoodSource = foodSources.get(i);
+    while (true) {
+      var i = this.random.nextInt(foodSources.size());
+      var randomFoodSource = foodSources.get(i);
 
-    return foodSource.generateNeighbor(randomFoodSource, random, this.alpha, this.foodSourceFactory);
+      if (foodSource != randomFoodSource) {
+        return foodSource.generateNeighbor(randomFoodSource, random, this.alpha, this.foodSourceFactory);
+      }
+    }
   }
 
-  void employedBeesPhase() {
-    System.out.println("employedBeesPhase");
-
+  void employedBeesPhase() throws TerminationException {
     var foodSources = this.population.stream().map(f -> (FoodSource) f).collect(Collectors.toList());
 
-    System.out.println("Population: " + population.size());
+    AtomicReference<TerminationException> terminationException = new AtomicReference<>();
 
-    this.employedBees.forEach(bee -> {
-      var foodSource = bee.getMemory();
-
-      foodSources.remove(foodSource);
-      var newFoodSource = this.generateRandomFoodSource(foodSource, foodSources);
-      foodSources.add(foodSource);
-
+    this.employedBees.parallelStream().forEach(bee -> {
       try {
-        this.getCompleter().complete(foodSource);
-        this.getCompleter().complete(newFoodSource);
+        findBetterFoodSource(bee, foodSources);
       } catch (TerminationException e) {
-        e.printStackTrace();
-      }
-
-      var newFoodSourceIsBetter = newFoodSource.getObjectives().dominates(foodSource.getObjectives());
-
-      if (newFoodSourceIsBetter) {
-        bee.setMemory(newFoodSource);
-        System.out.println("removed: " + this.population.remove(foodSource));
-        this.population.add(newFoodSource);
-      } else {
-        foodSource.isStillTheBestEver();
+        terminationException.set(e);
       }
     });
 
-    System.out.println("Population: " + population.size());
-
+    if (terminationException.get() != null) {
+      throw terminationException.get();
+    }
   }
 
-  void onlookerBeesPhase () {
-    System.out.println("onlookerBeesPhase");
+  void onlookerBeesPhase () throws TerminationException {
+    var foodSources = this.employedBees.parallelStream().map(bee -> bee.getMemory()).collect(Collectors.toList());
 
-    System.out.println("Population: " + population.size());
+    var fitnesses = foodSources.parallelStream().map(foodSource -> foodSource.fitness()).collect(Collectors.toList());
+    var totalFitness = fitnesses.parallelStream().mapToDouble(d -> d).sum();
 
-    var foodSources = this.employedBees.stream().map(bee -> bee.getMemory()).collect(Collectors.toList());
-
-    if (foodSources.isEmpty()) {
-      return;
-    }
-
-    var fitnesses = foodSources.stream().map(foodSource -> foodSource.fitness()).collect(Collectors.toList());
-    var totalFitness = fitnesses.stream().mapToDouble(d -> d).sum();
-
-    EnumeratedDistribution<FoodSource> distribution = new EnumeratedDistribution(IntStream.range(0, foodSources.size()).mapToObj(i -> {
+    EnumeratedDistribution<Bee> distribution = new EnumeratedDistribution(IntStream.range(0, foodSources.size()).parallel().mapToObj(i -> {
       var probability = fitnesses.get(i) / totalFitness;
-      return new Pair(foodSources.get(i), probability);
+      return new Pair(this.employedBees.get(i), probability);
     }).collect(Collectors.toList()));
 
-    this.onlookerBees.stream().forEach(bee -> {
-      var chosenFoodSource = distribution.sample();
-      var newFoodSource = this.generateRandomFoodSource(chosenFoodSource, foodSources);
+    AtomicReference<TerminationException> terminationException = new AtomicReference<>();
 
+    this.onlookerBees.parallelStream().forEach(__ -> {
+      var bee = distribution.sample();
       try {
-        this.getCompleter().complete(newFoodSource);
+        synchronized (bee) {
+          findBetterFoodSource(bee, foodSources);
+        }
       } catch (TerminationException e) {
-        e.printStackTrace();
-      }
-
-      var newFoodSourceIsBetter = newFoodSource.getObjectives().dominates(chosenFoodSource.getObjectives());
-
-      if (newFoodSourceIsBetter) {
-        this.population.remove(chosenFoodSource);
-        this.population.add(newFoodSource);
-      } else {
-        chosenFoodSource.isStillTheBestEver();
+        terminationException.set(e);
       }
     });
 
-    System.out.println("Population: " + population.size());
+    if (terminationException.get() != null) {
+      throw terminationException.get();
+    }
+  }
 
+  private void findBetterFoodSource(Bee bee, List<FoodSource> foodSources) throws TerminationException {
+    var foodSource = bee.getMemory();
+
+    var newFoodSource = this.generateRandomFoodSource(foodSource, foodSources);
+    this.completer.complete(newFoodSource);
+
+    var newFoodSourceIsBetter = newFoodSource.getObjectives().dominates(foodSource.getObjectives());
+
+    if (newFoodSourceIsBetter) {
+      bee.setMemory(newFoodSource);
+      synchronized (this.population) {
+        this.population.remove(foodSource);
+        this.population.add(newFoodSource);
+      }
+    } else {
+      foodSource.isStillTheBestEver();
+    }
   }
 
   void scoutBeesPhase() {
-    System.out.println("scoutBeesPhase");
-
-    System.out.println("Population: " + population.size());
-
-    this.employedBees = this.employedBees.stream().map(bee -> {
+    this.employedBees.parallelStream().forEach(bee -> {
       var foodSource = bee.getMemory();
 
       // If the abandonment limit for a food source is reached,
       // remove the old food source from the population and
       // scout for a random new food source.
       if (foodSource.getLimit() > this.limit) {
-        this.population.remove(foodSource);
         var newFoodSource = foodSourceFactory.create();
         bee.setMemory(newFoodSource);
-        this.population.add(newFoodSource);
-        return bee;
+
+        synchronized (this.population) {
+          this.population.remove(foodSource);
+          this.population.add(newFoodSource);
+        }
       }
-
-      return bee;
-    }).collect(Collectors.toList());
-
-    System.out.println("Population: " + population.size());
-
+    });
   }
 
   @Override
   public void next() throws TerminationException {
-    System.out.println("next");
-
     this.completer.complete(this.population);
 
     this.employedBeesPhase();
