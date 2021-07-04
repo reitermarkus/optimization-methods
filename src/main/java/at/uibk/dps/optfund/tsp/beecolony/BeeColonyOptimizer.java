@@ -72,45 +72,25 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 
     AtomicReference<TerminationException> terminationException = new AtomicReference<>();
 
-    this.employedBees.parallelStream().forEach(bee -> {
-      try {
-        findBetterFoodSource(bee, foodSources);
-      } catch (TerminationException e) {
-        terminationException.set(e);
-      }
-    });
-
-    if (terminationException.get() != null) {
-      throw terminationException.get();
+    for (var bee: this.employedBees) {
+      findBetterFoodSource(bee, foodSources);
     }
   }
 
   void onlookerBeesPhase () throws TerminationException {
-    var foodSources = this.employedBees.parallelStream().map(bee -> bee.getMemory()).collect(Collectors.toList());
+    var foodSources = this.employedBees.stream().map(bee -> bee.getMemory()).collect(Collectors.toList());
 
-    var fitnesses = foodSources.parallelStream().map(foodSource -> foodSource.fitness()).collect(Collectors.toList());
-    var totalFitness = fitnesses.parallelStream().mapToDouble(d -> d).sum();
+    var fitnesses = foodSources.stream().map(foodSource -> foodSource.fitness()).collect(Collectors.toList());
+    var totalFitness = fitnesses.stream().mapToDouble(d -> d).sum();
 
-    EnumeratedDistribution<Bee> distribution = new EnumeratedDistribution(IntStream.range(0, foodSources.size()).parallel().mapToObj(i -> {
+    EnumeratedDistribution<Bee> distribution = new EnumeratedDistribution(IntStream.range(0, foodSources.size()).mapToObj(i -> {
       var probability = fitnesses.get(i) / totalFitness;
       return new Pair(this.employedBees.get(i), probability);
     }).collect(Collectors.toList()));
 
-    AtomicReference<TerminationException> terminationException = new AtomicReference<>();
-
-    this.onlookerBees.parallelStream().forEach(__ -> {
+    for (var onlookerBee: this.onlookerBees) {
       var bee = distribution.sample();
-      try {
-        synchronized (bee) {
-          findBetterFoodSource(bee, foodSources);
-        }
-      } catch (TerminationException e) {
-        terminationException.set(e);
-      }
-    });
-
-    if (terminationException.get() != null) {
-      throw terminationException.get();
+      findBetterFoodSource(bee, foodSources);
     }
   }
 
@@ -124,17 +104,15 @@ class BeeColonyOptimizer implements IterativeOptimizer {
 
     if (newFoodSourceIsBetter) {
       bee.setMemory(newFoodSource);
-      synchronized (this.population) {
-        this.population.remove(foodSource);
-        this.population.add(newFoodSource);
-      }
+      this.population.remove(foodSource);
+      this.population.add(newFoodSource);
     } else {
       foodSource.isStillTheBestEver();
     }
   }
 
   void scoutBeesPhase() {
-    this.employedBees.parallelStream().forEach(bee -> {
+    this.employedBees.stream().forEach(bee -> {
       var foodSource = bee.getMemory();
 
       // If the abandonment limit for a food source is reached,
@@ -143,11 +121,8 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       if (foodSource.getLimit() > this.limit) {
         var newFoodSource = foodSourceFactory.create();
         bee.setMemory(newFoodSource);
-
-        synchronized (this.population) {
-          this.population.remove(foodSource);
-          this.population.add(newFoodSource);
-        }
+        this.population.remove(foodSource);
+        this.population.add(newFoodSource);
       }
     });
   }
