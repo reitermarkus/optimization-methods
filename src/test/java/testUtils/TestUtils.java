@@ -6,6 +6,10 @@ import org.opt4j.core.Objective;
 import org.opt4j.core.Objective.Sign;
 import org.opt4j.core.Objectives;
 import org.opt4j.core.genotype.DoubleGenotype;
+import org.opt4j.core.genotype.PermutationGenotype;
+import org.opt4j.tutorial.salesman.SalesmanProblem;
+
+import java.util.List;
 
 /**
  * Abstract class that provides some mocks and helper methods that are needed in
@@ -34,10 +38,10 @@ public class TestUtils {
 		return type;
 	}
 
-	public static DoubleString getDoubleString(double... values) {
-		DoubleString type = new DoubleString();
-		for (double value : values) {
-			type.add(value);
+	public static PermutationGenotype<SalesmanProblem.City> getPermutationGenotype(List<SalesmanProblem.City> cities) {
+		PermutationGenotype<SalesmanProblem.City> type = new PermutationGenotype<SalesmanProblem.City>();
+		for (SalesmanProblem.City city : cities) {
+			type.add(city);
 		}
 		return type;
 	}

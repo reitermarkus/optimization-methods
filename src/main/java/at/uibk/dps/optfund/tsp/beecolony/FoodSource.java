@@ -20,12 +20,12 @@ public class FoodSource extends Individual {
 	/**
 	 * Construct a new {@link FoodSource} with a given {@link Genotype}.
 	 *
-	 * @param genotype the food source's genotype.
+	 * @param permutationGenotype the food source's genotype.
 	 */
 	@Inject
-	public FoodSource(DoubleString genotype) {
+	public FoodSource(PermutationGenotype<City> permutationGenotype) {
 		super();
-		this.setGenotype(genotype);
+		this.setGenotype(permutationGenotype);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class FoodSource extends Individual {
 		return (PermutationGenotype<SalesmanProblem.City>) super.getGenotype();
 	}
 
-	public FoodSource generateNeighbor(Rand random, FoodSourceFactory factory, double alpha) {
+	public PermutationGenotype<SalesmanProblem.City> generateNeighbor(Rand random, double alpha) {
 		PermutationGenotype<SalesmanProblem.City> newRoute = new PermutationGenotype<>();
 		for (SalesmanProblem.City city : this.getGenotype()) {
 			newRoute.add(city);
@@ -49,7 +49,7 @@ public class FoodSource extends Individual {
 			}
 		}
 
-		return factory.create(newRoute);
+		return newRoute;
 	}
 
 	/**

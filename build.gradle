@@ -70,3 +70,19 @@ task beecolony(group: 'application') {
     tasks.run.args('-s', 'configs/beecolony_tsp.xml').exec()
   }
 }
+
+task reference_dtlz(group: 'application') {
+  dependsOn tasks.build
+
+  doLast {
+    tasks.run.args('-s', 'configs/reference_dtlz.xml').exec()
+  }
+}
+
+task reference_tsp(group: 'application') {
+  dependsOn tasks.build
+
+  doLast {
+    tasks.run.args('-s', 'configs/reference_tsp.xml').exec()
+  }
+}
