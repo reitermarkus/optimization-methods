@@ -9,10 +9,10 @@
     <property name="generations">1000</property>
     <property name="populationSize">100</property>
     <property name="alpha">0.01</property>
-    <property name="limit">10</property>
+    <property name="limit">200</property>
   </module>
-  <module class="at.uibk.dps.optfund.tsp.beecolony.BeeColonyProblemModule">
-    <property name="n">1000</property>
+  <module class="org.opt4j.tutorial.salesman.SalesmanModule">
+    <property name="size">1000</property>
   </module>
   <module class="org.opt4j.tutorial.salesman.SalesmanWidgetModule"/>
   <module class="org.opt4j.core.common.logger.LoggerModule">
