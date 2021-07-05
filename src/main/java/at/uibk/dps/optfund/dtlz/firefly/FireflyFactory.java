@@ -18,7 +18,7 @@ import com.google.inject.Singleton;
 public class FireflyFactory extends AbstractIndividualFactory<Firefly> {
 
 	/**
-	 * Constructs a {@link FireflyFactory}
+	 * Constructs a {@link FireflyFactory}.
 	 * 
 	 * @param particleProvider the provider for particles
 	 * @param creator          the creator
@@ -28,6 +28,9 @@ public class FireflyFactory extends AbstractIndividualFactory<Firefly> {
 		super(fireflyProvider, creator);
 	}
 
+	/**
+	 * Constructs a {@link FireflyFactory}.
+	 */
 	@Override
 	public Firefly create() {
 		return (Firefly) super.create();

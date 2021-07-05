@@ -49,16 +49,11 @@ public class FireflyAlgorithm implements IterativeOptimizer {
 	 * @param gamma             absorption constant
 	 */
 	@Inject
-	public FireflyAlgorithm(
-	  Population population,
-    IndividualFactory individualFactory,
-    IndividualCompleter completer,
-    Rand random,
-    @Constant(value = "populationSize", namespace = FireflyAlgorithm.class) int populationSize,
-    @Constant(value = "alpha", namespace = FireflyAlgorithm.class) double alpha,
-    @Constant(value = "beta0", namespace = FireflyAlgorithm.class) double beta0,
-    @Constant(value = "gamma", namespace = FireflyAlgorithm.class) double gamma
-  ) {
+	public FireflyAlgorithm(Population population, IndividualFactory individualFactory, IndividualCompleter completer,
+			Rand random, @Constant(value = "populationSize", namespace = FireflyAlgorithm.class) int populationSize,
+			@Constant(value = "alpha", namespace = FireflyAlgorithm.class) double alpha,
+			@Constant(value = "beta0", namespace = FireflyAlgorithm.class) double beta0,
+			@Constant(value = "gamma", namespace = FireflyAlgorithm.class) double gamma) {
 		this.population = population;
 		this.individualFactory = (FireflyFactory) individualFactory;
 		this.completer = completer;
@@ -96,9 +91,9 @@ public class FireflyAlgorithm implements IterativeOptimizer {
 	}
 
 	/**
-	 * Update the position of each firefly.
+	 * Update the position of each {@link Firefly}.
 	 * 
-	 * @param fireflies list of fireflies, sorted ascending by their error
+	 * @param list of {@link Firefly}'s, sorted ascending by their error
 	 * @throws TerminationException
 	 */
 	private void updatePositions(List<Firefly> fireflies) throws TerminationException {
@@ -123,7 +118,7 @@ public class FireflyAlgorithm implements IterativeOptimizer {
 	}
 
 	/**
-	 * Sort fireflies by their errors, from lowest to highest.
+	 * Sort {@link Firefly}'s by their errors, from lowest to highest.
 	 * 
 	 * @param fireflies to sort
 	 * @return sorted list of fireflies
@@ -133,9 +128,9 @@ public class FireflyAlgorithm implements IterativeOptimizer {
 	}
 
 	/**
-	 * Creates the initial population of fireflies
+	 * Creates the initial {@link Population}, filled with {@link Firefly}'s.
 	 * 
-	 * @return List of fireflies
+	 * @return List of {@link Firefly}'s
 	 */
 	public List<Firefly> getInitPopulation() {
 		List<Firefly> fireflies = new ArrayList<>();

@@ -6,7 +6,7 @@ import java.util.Comparator;
 import org.opt4j.core.Objectives;
 
 /**
- * Custom Comparator implementation, used for sorting the fireflies.
+ * Custom Comparator implementation, used for sorting.
  * 
  * @author Josef Gugglberger
  *
@@ -14,7 +14,8 @@ import org.opt4j.core.Objectives;
 public class FireflyComparator implements Comparator<Firefly> {
 
 	/**
-	 * Compares the objectives of f1 and f1 according to Arrays.compare().
+	 * Compares the {@link Objectives} of {@link Firefly} f1 and {@link Firefly} f2
+	 * according to Arrays.compare().
 	 * 
 	 */
 	@Override

@@ -1,6 +1,7 @@
 package at.uibk.dps.optfund.dtlz.firefly;
 
 import org.opt4j.core.Individual;
+import org.opt4j.core.Objectives;
 import org.opt4j.core.genotype.DoubleGenotype;
 
 /**
@@ -22,7 +23,7 @@ public class Firefly extends Individual {
 	}
 
 	/**
-	 * Euclidean distance between two fireflies.
+	 * Euclidean distance between two {@link Firefly}'s.
 	 * 
 	 * @param otherFly the fly to compare to
 	 * @return distance between two fireflies
@@ -49,6 +50,11 @@ public class Firefly extends Individual {
 		return 1 / (1 + getError());
 	}
 
+	/**
+	 * Sums up the error over all {@link Objectives}.
+	 * 
+	 * @return sum of errors
+	 */
 	public double getError() {
 		return this.getObjectives().getValues().stream().mapToDouble(v -> v.getDouble()).sum();
 	}
