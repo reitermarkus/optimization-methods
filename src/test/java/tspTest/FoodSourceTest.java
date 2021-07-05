@@ -56,15 +56,12 @@ public class FoodSourceTest {
 		FoodSource source1 = new FoodSource(TestUtils.getPermutationGenotype(cities));
 
 		source1.setObjectives(TestUtils.getObjectives(10));
-
 		assertEquals(source1.fitness(), 0.1, TestUtils.ATOL);
 
 		source1.markForAbandonment();
-
 		assertFalse(source1.shouldBeAbandoned(1));
 
 		source1.markForAbandonment();
-
 		assertTrue(source1.shouldBeAbandoned(1));
 	}
 
@@ -80,5 +77,4 @@ public class FoodSourceTest {
 	public void generateNeighborTest() {
 
 	}
-
 }
