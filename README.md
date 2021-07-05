@@ -1,4 +1,6 @@
-# Optimization Methods
+# Optimization Methods [![Code Coverage](https://codecov.io/gh/reitermarkus/optimization-methods/branch/main/graph/badge.svg)](https://codecov.io/github/reitermarkus/optimization-methods)
+
+
 
 ## Algorithms
 
