@@ -20,6 +20,13 @@ test {
 
 jacocoTestReport {
     dependsOn test
+
+    reports {
+      xml.enabled true
+      xml.destination file("${buildDir}/reports/jacoco/report.xml")
+      html.enabled false
+      csv.enabled false
+    }
 }
 
 // to use GitHub repositories as dependencies
@@ -86,3 +93,4 @@ task reference_tsp(group: 'application') {
     tasks.run.args('-s', 'configs/reference_tsp.xml').exec()
   }
 }
+
