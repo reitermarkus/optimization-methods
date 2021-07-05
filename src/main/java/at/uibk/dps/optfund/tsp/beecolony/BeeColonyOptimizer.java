@@ -76,7 +76,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       var randomFoodSource = foodSources.get(i);
 
       if (foodSource != randomFoodSource) {
-        return foodSource.generateNeighbor(randomFoodSource, this.random, this.alpha, this.foodSourceFactory);
+        return foodSource.generateNeighbor(this.random, this.foodSourceFactory, this.alpha);
       }
     }
   }

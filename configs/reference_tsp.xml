@@ -13,7 +13,7 @@
     <property name="crossoverRate">0.95</property>
   </module>
   <module class="org.opt4j.tutorial.salesman.SalesmanModule">
-    <property name="size">10000</property>
+    <property name="size">1000</property>
   </module>
   <module class="org.opt4j.tutorial.salesman.SalesmanWidgetModule"/>
   <module class="org.opt4j.viewer.ViewerModule">

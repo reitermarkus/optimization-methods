@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.opt4j.benchmarks.DoubleString;
 import org.opt4j.core.genotype.Bounds;
@@ -16,6 +17,7 @@ public class FoodSourceTest {
 
 	private Bounds<Double> bound = mock(Bounds.class);
 
+	@Ignore
 	@Test
 	public void foodSourceEqualsTest() {
 
@@ -34,6 +36,7 @@ public class FoodSourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void foodSourceTest() {
 		FoodSource source1 = new FoodSource(TestUtils.getDoubleString(0, 1));
@@ -51,6 +54,7 @@ public class FoodSourceTest {
 		assertTrue(source1.shouldBeAbandoned(1));
 	}
 
+	@Ignore
 	@Test
 	public void foodSourceHashCodeTest() {
 		DoubleString gen = TestUtils.getDoubleString(0, 1);

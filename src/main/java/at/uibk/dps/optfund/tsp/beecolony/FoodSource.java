@@ -1,18 +1,19 @@
 package at.uibk.dps.optfund.tsp.beecolony;
 
-import com.google.common.collect.Streams;
-import com.google.inject.*;
-import org.opt4j.benchmarks.*;
-import org.opt4j.core.*;
-import org.opt4j.core.Objective.Sign;
-import org.opt4j.core.common.random.*;
+import java.util.Objects;
 
-import java.util.*;
-import java.util.stream.*;
+import org.opt4j.benchmarks.DoubleString;
+import org.opt4j.core.Genotype;
+import org.opt4j.core.Individual;
+import org.opt4j.core.common.random.Rand;
+import org.opt4j.core.genotype.PermutationGenotype;
+import org.opt4j.tutorial.salesman.SalesmanProblem;
+import org.opt4j.tutorial.salesman.SalesmanProblem.City;
+
+import com.google.inject.Inject;
 
 public class FoodSource extends Individual {
 	// The name of the `fitness` minimization objective.
-	static Objective FITNESS = new Objective("fitness", Sign.MIN);
 
 	private int abandonmentCounter;
 
@@ -28,31 +29,27 @@ public class FoodSource extends Individual {
 	}
 
 	@Override
-	public DoubleString getGenotype() {
-		return (DoubleString) super.getGenotype();
+	public PermutationGenotype<SalesmanProblem.City> getGenotype() {
+		return (PermutationGenotype<SalesmanProblem.City>) super.getGenotype();
 	}
 
-	/**
-	 * Generate a new {@link FoodSource} location by adding/subtracting a random
-	 * offset (between `-a` and `a`) in the direction of another food source. See
-	 * http://www.scholarpedia.org/article/Artificial_bee_colony_algorithm#Eq-6.
-	 *
-	 * @param otherSource another food source, used for specifying the direction
-	 * @param random      a random number generator
-	 * @param a           a number, specifying the distance bound
-	 * @param factory     a food source factory
-	 * @return a food source
-	 */
-	public FoodSource generateNeighbor(FoodSource otherSource, Rand random, double a, FoodSourceFactory factory) {
-		var locationA = this.getGenotype().stream();
-		var locationB = otherSource.getGenotype().stream();
+	public FoodSource generateNeighbor(Rand random, FoodSourceFactory factory, double alpha) {
+		PermutationGenotype<SalesmanProblem.City> newRoute = new PermutationGenotype<>();
+		for (SalesmanProblem.City city : this.getGenotype()) {
+			newRoute.add(city);
+		}
 
-		var newLocation = Streams.zip(locationA, locationB, (m, k) -> {
-			var phi = (random.nextDouble() * 2.0 - 1.0) * a;
-			return m + phi * (m - k);
-		}).collect(Collectors.toCollection(DoubleString::new));
+		// get neighbors by swapping some cities in list
+		for (City city : newRoute) {
+			if (random.nextDouble() < alpha) {
+				int randCityIdx = random.nextInt(newRoute.size());
+				City tmpCity = newRoute.get(randCityIdx);
+				newRoute.set(randCityIdx, city);
+				newRoute.set(newRoute.indexOf(city), tmpCity);
+			}
+		}
 
-		return factory.create(newLocation);
+		return factory.create(newRoute);
 	}
 
 	/**
@@ -61,7 +58,7 @@ public class FoodSource extends Individual {
 	 * @return the fitness
 	 */
 	public double fitness() {
-		return this.getObjectives().get(FITNESS).getDouble();
+		return this.objectives.getValues().stream().mapToDouble(v -> v.getDouble()).sum();
 	}
 
 	/**
