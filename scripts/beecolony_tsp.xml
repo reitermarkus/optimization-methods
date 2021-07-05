@@ -1,0 +1,25 @@
+<configuration>
+  <!--<module class="at.uibk.dps.optfund.tsp.modules.TspSeedModule"/>-->
+  <module class="org.opt4j.core.common.random.RandomModule">
+    <property name="type">MERSENNE_TWISTER</property>
+    <property name="usingSeed">true</property>
+    <property name="seed">10</property>
+  </module>
+  <module class="at.uibk.dps.optfund.tsp.beecolony.BeeColonyOptimizerModule">
+    <property name="generations">1000</property>
+    <property name="populationSize">100</property>
+    <property name="alpha">0.01</property>
+    <property name="limit">10</property>
+  </module>
+  <module class="at.uibk.dps.optfund.tsp.beecolony.BeeColonyProblemModule">
+    <property name="n">1000</property>
+  </module>
+  <module class="org.opt4j.tutorial.salesman.SalesmanWidgetModule"/>
+  <module class="org.opt4j.core.common.logger.LoggerModule">
+    <property name="filename">file.tsv</property>
+    <property name="loggingPerEvaluation">false</property>
+    <property name="evaluationStep">100</property>
+    <property name="loggingPerIteration">true</property>
+    <property name="iterationStep">100</property>
+  </module>
+</configuration>

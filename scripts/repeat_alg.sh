@@ -3,9 +3,9 @@
 # repeatedly run firefly/reference algorithm and log results to outputs directory 
 # used for evaluating/comparing algorithms
 
-alg="reference" # firefly or reference
+alg="reference_tsp" # firefly_dtlz, reference_dtlz, beecolony_tsp, reference_tsp
 
-file="scripts/${alg}_dtlz.xml"
+file="scripts/${alg}.xml"
 for num in {0..10}; do
   outfilename="outputs/out_${alg}_${num}.tsv"
   echo "write to file "$outfilename

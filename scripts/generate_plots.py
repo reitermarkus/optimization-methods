@@ -11,7 +11,7 @@ import statistics
 import numpy as np
 import matplotlib.pyplot as plt
 
-alg = 'reference'  # reference or firelfy
+alg = 'reference_tsp'  # reference or firelfy
 
 out_path = 'outputs/'
 files = os.listdir(out_path)
@@ -50,10 +50,9 @@ for key in sorted_keys:
 	averages.append(sum(errors_iter[key])/len(errors_iter[key]))
 	std_deviations.append(statistics.pstdev(errors_iter[key]))
 
-
 print('error:',  averages[-1], '+/-', std_deviations[-1])
 print(avg_evals, 'evaluations on average')
-print('took', avg_runtime, 'ms on average')
+print('took', avg_runtime, 's on average')
 
 # plot
 plt.scatter(errors_iter.keys(), averages)
@@ -62,5 +61,5 @@ plt.plot(errors_iter.keys(), averages)
 plt.xlabel('iterations')
 plt.ylabel('error')
 x1, x2, y1, y2 = plt.axis()  
-plt.axis((x1, x2, 0, 41000))
+plt.axis((x1, x2, 0, 50000))
 plt.savefig(out_path + alg + '.png', dpi=300)
