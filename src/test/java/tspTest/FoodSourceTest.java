@@ -24,6 +24,7 @@ public class FoodSourceTest {
 
 		assertTrue(source1.equals(source2));
 		assertTrue(source2.equals(source1));
+		assertTrue(source1.equals(source1));
 
 		source2 = new FoodSource(TestUtils.getDoubleString(0, 10));
 
@@ -39,7 +40,7 @@ public class FoodSourceTest {
 
 		source1.setObjectives(TestUtils.getObjectives(10));
 
-		assertEquals(source1.fitness(), 10d, 0.001);
+		assertEquals(source1.fitness(), 10d, TestUtils.ATOL);
 
 		source1.markForAbandonment();
 

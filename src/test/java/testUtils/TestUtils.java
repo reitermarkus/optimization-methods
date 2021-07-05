@@ -18,6 +18,8 @@ public class TestUtils {
 
 	static Objective FITNESS = new Objective("fitness", Sign.MIN);
 
+	public static double ATOL = 0.0001;
+
 	/**
 	 * Constructs a Genotype from double values.
 	 * 
