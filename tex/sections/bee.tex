@@ -9,7 +9,9 @@
 		\label{fig:reference_tsp}
 	\end{subfigure}%
 	\begin{subfigure}{.5\textwidth}
-		%TODO add plot for bee colony
+		\includegraphics[width=0.75\linewidth]{assets/beecolony_tsp.png}
+		\caption{Error over iterations using the bee colony algorithm.}
+		\label{fig:becolony_tsp}
 	\end{subfigure}
 	\caption{Comparison of bee colony and evolutionary algorithm on the TSP problem.}
 	\label{fig:bee_vs_ea}
@@ -21,6 +23,7 @@
 		\hline
 		\textbf{Optimizer} & \textbf{Error} & \textbf{Evaluations} & \textbf{Runtime [s]} \\
 		\hline
+		Bee Colony Algorithm & $37380.08 \pm 213.10$ & 100050 & 3.75 \\
 		Reference Evolutionary Algorithm & $35012.41 \pm 482.07$ & 25000 & 2.90 \\
 		\hline
 	\end{tabular}

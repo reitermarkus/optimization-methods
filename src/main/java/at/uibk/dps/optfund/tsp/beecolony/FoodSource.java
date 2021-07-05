@@ -33,6 +33,15 @@ public class FoodSource extends Individual {
 		return (PermutationGenotype<SalesmanProblem.City>) super.getGenotype();
 	}
 
+	/**
+	 * Finds a neighboring route by swapping some of the cities in the genotype. The
+	 * degree to which the swapping happens can be controlled with the alpha
+	 * parameter.
+	 * 
+	 * @param random
+	 * @param alpha  controls likelihood to swap
+	 * @return a new {@link PermutationGenotype}
+	 */
 	public PermutationGenotype<SalesmanProblem.City> generateNeighbor(Rand random, double alpha) {
 		PermutationGenotype<SalesmanProblem.City> newRoute = new PermutationGenotype<>();
 		for (SalesmanProblem.City city : this.getGenotype()) {
