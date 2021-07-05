@@ -34,7 +34,6 @@ public class FoodSourceTest {
 
 	@Test
 	public void foodSourceEqualsTest() {
-
 		when(rand.nextDouble()).thenReturn(0.5);
 
 		FoodSource source1 = new FoodSource(TestUtils.getPermutationGenotype(cities));
@@ -58,7 +57,7 @@ public class FoodSourceTest {
 
 		source1.setObjectives(TestUtils.getObjectives(10));
 
-		assertEquals(source1.fitness(), 10d, TestUtils.ATOL);
+		assertEquals(source1.fitness(), 0.1, TestUtils.ATOL);
 
 		source1.markForAbandonment();
 

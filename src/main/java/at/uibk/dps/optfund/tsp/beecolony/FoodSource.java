@@ -67,7 +67,7 @@ public class FoodSource extends Individual {
 	 * @return the fitness
 	 */
 	public double fitness() {
-		return this.objectives.getValues().stream().mapToDouble(v -> v.getDouble()).sum();
+		return 1.0 / this.objectives.getValues().stream().mapToDouble(v -> v.getDouble()).sum();
 	}
 
 	/**
