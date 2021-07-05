@@ -13,8 +13,16 @@ apply plugin: 'jacoco'
 jacoco {
   toolVersion = "0.8.5"
 }
-// to use GitHub repositories as dependencies
 
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+}
+
+// to use GitHub repositories as dependencies
 mainClassName = 'org.opt4j.core.start.Opt4J'
 
 group 'importance'
