@@ -1,5 +1,6 @@
-package dtlzTest;
+package testUtils;
 
+import org.opt4j.benchmarks.DoubleString;
 import org.opt4j.core.Genotype;
 import org.opt4j.core.Objective;
 import org.opt4j.core.Objective.Sign;
@@ -13,9 +14,9 @@ import org.opt4j.core.genotype.DoubleGenotype;
  * @author Josef Gugglberger
  *
  */
-public abstract class AbstractFireflyTest {
+public class TestUtils {
 
-	protected static final Objective firstObj = new Objective("first", Sign.MAX);
+	static Objective FITNESS = new Objective("fitness", Sign.MIN);
 
 	/**
 	 * Constructs a Genotype from double values.
@@ -23,8 +24,16 @@ public abstract class AbstractFireflyTest {
 	 * @param values
 	 * @return Genotype from given double valuess
 	 */
-	protected static Genotype getGenotype(double... values) {
+	public static Genotype getGenotype(double... values) {
 		DoubleGenotype type = new DoubleGenotype();
+		for (double value : values) {
+			type.add(value);
+		}
+		return type;
+	}
+
+	public static DoubleString getDoubleString(double... values) {
+		DoubleString type = new DoubleString();
 		for (double value : values) {
 			type.add(value);
 		}
@@ -37,10 +46,10 @@ public abstract class AbstractFireflyTest {
 	 * @param objectives
 	 * @return Objectives form given integer values
 	 */
-	protected static Objectives getObjectives(int... objectives) {
+	public static Objectives getObjectives(int... objectives) {
 		Objectives result = new Objectives();
 		for (double obj : objectives) {
-			result.add(firstObj, obj);
+			result.add(FITNESS, obj);
 		}
 		return result;
 	}

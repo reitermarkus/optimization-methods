@@ -27,6 +27,7 @@ import at.uibk.dps.optfund.dtlz.firefly.Firefly;
 import at.uibk.dps.optfund.dtlz.firefly.FireflyAlgorithm;
 import at.uibk.dps.optfund.dtlz.firefly.FireflyAlgorithmModule;
 import at.uibk.dps.optfund.dtlz.firefly.FireflyFactory;
+import testUtils.TestUtils;
 
 /**
  * Collection of tests for the FireflyAlgorithm class.
@@ -34,7 +35,7 @@ import at.uibk.dps.optfund.dtlz.firefly.FireflyFactory;
  * @author Josef Gugglberger
  *
  */
-public class FireflyAlgorithmTest extends AbstractFireflyTest {
+public class FireflyAlgorithmTest {
 
 	protected static int POPULATION_SIZE = 10;
 
@@ -63,9 +64,9 @@ public class FireflyAlgorithmTest extends AbstractFireflyTest {
 		Firefly fly2 = spy(Firefly.class);
 		Firefly fly3 = spy(Firefly.class);
 
-		fly1.setObjectives(getObjectives(3));
-		fly2.setObjectives(getObjectives(2));
-		fly3.setObjectives(getObjectives(1));
+		fly1.setObjectives(TestUtils.getObjectives(3));
+		fly2.setObjectives(TestUtils.getObjectives(2));
+		fly3.setObjectives(TestUtils.getObjectives(1));
 
 		List<Firefly> population = Arrays.asList(fly1, fly2, fly3);
 
@@ -73,9 +74,9 @@ public class FireflyAlgorithmTest extends AbstractFireflyTest {
 
 		population = alg.sortFireflies(population);
 
-		assertTrue(population.get(0).getIntensity() > population.get(1).getIntensity());
-		assertTrue(population.get(0).getIntensity() > population.get(2).getIntensity());
-		assertTrue(population.get(1).getIntensity() > population.get(2).getIntensity());
+		assertTrue(population.get(0).getIntensity() < population.get(1).getIntensity());
+		assertTrue(population.get(0).getIntensity() < population.get(2).getIntensity());
+		assertTrue(population.get(1).getIntensity() < population.get(2).getIntensity());
 	}
 
 	@Test
