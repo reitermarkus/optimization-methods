@@ -50,7 +50,7 @@ public class FoodSource extends Individual {
 
 		// get neighbors by swapping some cities in list
 		for (City city : newRoute) {
-			if (random.nextDouble() < alpha) {
+			if (random.nextDouble() <= alpha) {
 				int randCityIdx = random.nextInt(newRoute.size());
 				City tmpCity = newRoute.get(randCityIdx);
 				newRoute.set(randCityIdx, city);

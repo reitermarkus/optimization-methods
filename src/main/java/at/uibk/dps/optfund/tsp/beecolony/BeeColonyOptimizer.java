@@ -16,6 +16,7 @@ import org.opt4j.core.start.*;
  * The {@link BeeColonyOptimizer} is an implementation of the Artificial Bee Colony Algorithm.
  */
 @Info("Artificial Bee Colony Algorithm")
+public
 class BeeColonyOptimizer implements IterativeOptimizer {
   private final Population population;
   private final FoodSourceFactory foodSourceFactory;
@@ -25,9 +26,12 @@ class BeeColonyOptimizer implements IterativeOptimizer {
   protected final int populationSize;
   protected final double alpha;
   protected final int limit;
+  public Object next;
 
   protected List<Bee> employedBees = new ArrayList<>();
   protected List<Bee> onlookerBees = new ArrayList<>();
+
+  private boolean initialized = false;
 
   @Inject
   public BeeColonyOptimizer(
@@ -53,8 +57,8 @@ class BeeColonyOptimizer implements IterativeOptimizer {
    */
   @Override
   public void initialize() {
-    this.onlookerBees = Stream.generate(() -> new Bee()).limit(this.populationSize / 2).collect(Collectors.toList());
-    this.employedBees = Stream.generate(() -> new Bee()).limit(this.populationSize / 2).map(bee -> {
+    this.onlookerBees = Stream.generate(() -> new Bee()).limit(this.populationSize).collect(Collectors.toList());
+    this.employedBees = Stream.generate(() -> new Bee()).limit(this.populationSize).map(bee -> {
       var foodSource = foodSourceFactory.create();
       bee.setMemory(foodSource);
       this.population.add(foodSource);
@@ -151,8 +155,8 @@ class BeeColonyOptimizer implements IterativeOptimizer {
    * In the scout bees phase, all {@link FoodSource}s are evaluated and abandoned if needed. Scout bees
    * then look for random new food sources to replace abandoned ones.
    */
-  void scoutBeesPhase() {
-    this.employedBees.stream().forEach(bee -> {
+  void scoutBeesPhase() throws TerminationException {
+    for (var bee: this.employedBees) {
       var foodSource = bee.getMemory();
 
       // If the abandonment limit for a food source is reached,
@@ -160,11 +164,13 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       // scout for a random new food source.
       if (foodSource.shouldBeAbandoned(this.limit)) {
         var newFoodSource = foodSourceFactory.create();
+        this.completer.complete(newFoodSource);
+
         bee.setMemory(newFoodSource);
         this.population.remove(foodSource);
         this.population.add(newFoodSource);
       }
-    });
+    }
   }
 
   /**
@@ -174,7 +180,10 @@ class BeeColonyOptimizer implements IterativeOptimizer {
    */
   @Override
   public void next() throws TerminationException {
-    this.completer.complete(this.population);
+    if (!this.initialized) {
+      this.completer.complete(this.population);
+      this.initialized = true;
+    }
 
     this.employedBeesPhase();
     this.onlookerBeesPhase();
