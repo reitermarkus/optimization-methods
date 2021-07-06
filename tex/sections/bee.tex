@@ -1,6 +1,6 @@
-\section{Bee Colony Algorithm}
+\section{Artificial Bee Colony Algorithm}
 
-The artificial bee colony (ABC) algorithm is a nature-inspired, meta-heuristic optimisation
+The Artificial Bee Colony (ABC) algorithm is a nature-inspired, meta-heuristic optimisation
 algorithm. It was introduced by Karaboga in \cite{beecolony}, and is motivated by the behaviour of honey bees.
 
 The model defines three components: employed bees, unemployed bees, and food sources. Employed bees search for new food sources by searching in their neighbourhood. They show the gathered information to the unemployed bees, which get recruited by a probability dependent on the food source quality. Employed bees that where not able to improve the quality of their food source multiple times, will abandon this food source and become scout bees. Scouts are choosing their food source randomly.
@@ -10,10 +10,12 @@ Since we are seeking to solve the Travelling Salesman Problem (TSP), each food s
 
 \subsection{Experiments}
 
-In this section we compare our implementation of the artificial bee colony algorithm to the
+In this section we compare our implementation of the Artificial Bee Colony algorithm to the
 reference evolutionary algorithm on the TSP problem.
 
-As table \ref{tab:bee_vs_ea} and figure \ref{fig:bee_vs_ea} are showing, the bee colony algorithm performed slightly worse than the reference evolutionary algorithm. For our tests we initialised 40 bees and optimise over 1000 iterations. We set the randomisation factor $\alpha = 0.005$, and the abandon-limit to 200.
+As table \ref{tab:bee_vs_ea} and figure \ref{fig:bee_vs_ea} are showing, the ABC algorithm performed slightly worse than the reference evolutionary algorithm. As the standard deviations in table \ref{tab:bee_vs_ea} show, de results of the ABC algorithm where more stable when compared to the EA. 
+
+For our tests we initialised 40 bees and optimise over 1000 iterations. We set the randomisation factor $\alpha = 0.005$, and the abandon-limit to 200.
 The two approaches are very comparable in terms of their run-time, although the bee colony algorithm performs a higher number of evaluations over the same amount of iterations.
 
 \begin{figure}[h]
@@ -32,7 +34,7 @@ The two approaches are very comparable in terms of their run-time, although the 
 		\caption{Error over iterations using the bee colony algorithm.}
 		\label{fig:becolony_tsp}
 	\end{subfigure}
-	\caption{Comparison of bee colony and evolutionary algorithm on the TSP problem.}
+	\caption{Comparison of ABC and evolutionary algorithm on the TSP problem.}
 	\label{fig:bee_vs_ea}
 \end{figure}
 
