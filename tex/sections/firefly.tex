@@ -10,7 +10,7 @@ brightness of the fireflies, and last, the attraction decreases with increasing
 distance.  Each firefly represents one solution to the optimisation problem. We
 initialise the fireflies randomly over the search space. The brightness of a
 firefly is determined by the firefly's error (or its reciprocal, depending if
-we seek for maximisation or minimisation). At each iteration each firefly
+we seek for maximisation or minimisation). At each iteration, each firefly
 moves a little step into the direction of each other firefly that has a higher
 brightness. The formula of the movement is given as:
 
@@ -26,7 +26,7 @@ random number between 0 and 1.
 \subsection{Experiments}
 
 In this section we compare our implementation of the firefly algorithm to the
-reference evolutionary algorithm. For our tests we initialised 50 fireflies and
+reference evolutionary algorithm on the DTLZ1 problem. For our tests we initialised 50 fireflies and
 optimise over 275 iterations. We used following parameters for all experiments:
 $\alpha = 0.001$, $\beta_0 = 1$, and $\gamma = 0.05$.
 
@@ -45,7 +45,7 @@ algorithm, the number of evaluations is not constant in each iteration.
   \centering
    \begin{tabular}{|c c c c|}
      \hline
-     \textbf{Optimizer} & \textbf{Error} & \textbf{Evaluations} & \textbf{Runtime [s]} \\
+     \textbf{Optimiser} & \textbf{Error} & \textbf{Evaluations} & \textbf{Run-time [s]} \\
      \hline
      Firefly Algorithm & $781.63 \pm 42.28$ & 227912 & 8.39 \\
      Reference Evolutionary Algorithm & $3003.58 \pm 87.35$ & 250000 & 24.53 \\
@@ -60,14 +60,14 @@ algorithm, the number of evaluations is not constant in each iteration.
   \begin{subfigure}{.5\textwidth}
     \centering
     \captionsetup{width=0.75\linewidth}
-    \includegraphics[width=0.75\linewidth]{assets/reference.png}
+    \includegraphics[width=0.75\linewidth]{assets/reference_dtlz.png}
     \caption{Error over iterations using the reference evolutionary algorithm.}
     \label{fig:sub1}
   \end{subfigure}%
   \begin{subfigure}{.5\textwidth}
     \centering
     \captionsetup{width=0.75\linewidth}
-    \includegraphics[width=0.75\linewidth]{assets/firefly.png}
+    \includegraphics[width=0.75\linewidth]{assets/firefly_dtlz.png}
     \caption{Error over iterations over using the firefly algorithm.}
     \label{fig:sub2}
   \end{subfigure}

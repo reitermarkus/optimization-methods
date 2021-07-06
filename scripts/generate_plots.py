@@ -11,7 +11,7 @@ import statistics
 import numpy as np
 import matplotlib.pyplot as plt
 
-alg = 'reference_tsp'  # reference or firelfy
+alg = 'beecolony_tsp'  # reference or firelfy
 
 out_path = 'outputs/'
 files = os.listdir(out_path)
@@ -61,5 +61,6 @@ plt.plot(errors_iter.keys(), averages)
 plt.xlabel('iterations')
 plt.ylabel('error')
 x1, x2, y1, y2 = plt.axis()  
-plt.axis((x1, x2, 0, 50000))
+plt.axis((x1, x2, 25000, 50000))
+plt.grid()
 plt.savefig(out_path + alg + '.png', dpi=300)
