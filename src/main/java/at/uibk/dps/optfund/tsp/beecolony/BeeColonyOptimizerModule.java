@@ -2,9 +2,17 @@ package at.uibk.dps.optfund.tsp.beecolony;
 
 import org.opt4j.core.*;
 import org.opt4j.core.config.annotations.*;
+import org.opt4j.core.config.annotations.Citation.*;
 import org.opt4j.core.optimizer.*;
 import org.opt4j.core.start.*;
 
+/**
+ * The {@link BeeColonyOptimizerModule} configures the {@link BeeColonyOptimizer}.
+ *
+ * @author Markus Reiter
+ * @author Michael Kaltschmid
+ */
+@Citation(title = "Artificial Bee Colony (ABC) Algorithm", authors = "Karaboga, Dervis", journal = "Scholarpedia", year = 2010, month = PublicationMonth.UNKNOWN)
 public class BeeColonyOptimizerModule extends OptimizerModule {
   @Info("The number of generations.")
   @Order(0)

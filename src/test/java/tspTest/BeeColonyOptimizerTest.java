@@ -3,14 +3,20 @@ package tspTest;
 import at.uibk.dps.optfund.tsp.beecolony.*;
 import com.google.inject.*;
 import org.junit.*;
-import static org.junit.Assert.*;
-
 import org.opt4j.core.*;
 import org.opt4j.core.common.completer.*;
 import org.opt4j.core.common.random.*;
 import org.opt4j.core.optimizer.*;
 import org.opt4j.tutorial.salesman.*;
 
+import static org.junit.Assert.*;
+
+/**
+ * Tests for the {@link BeeColonyOptimizer}.
+ *
+ * @author Markus Reiter
+ * @author Michael Kaltschmid
+ */
 public class BeeColonyOptimizerTest {
   @Test
   public void testNext() throws TerminationException {

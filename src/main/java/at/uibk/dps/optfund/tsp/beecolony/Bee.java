@@ -1,12 +1,19 @@
 package at.uibk.dps.optfund.tsp.beecolony;
 
+/**
+ * A {@link Bee} represents a bee, including a possible memorized {@link FoodSource}.
+ *
+ * @author Markus Reiter
+ * @author Michael Kaltschmid
+ */
 public class Bee {
   private FoodSource memory;
 
   /**
    * Construct a new {@link Bee}.
    */
-  public Bee() {}
+  public Bee() {
+  }
 
   /**
    * Get a {@link Bee}'s memorized {@link FoodSource}.

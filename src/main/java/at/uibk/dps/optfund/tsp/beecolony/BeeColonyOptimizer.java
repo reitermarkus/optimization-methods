@@ -1,31 +1,33 @@
 package at.uibk.dps.optfund.tsp.beecolony;
 
-import java.util.*;
-import java.util.stream.*;
-
 import com.google.inject.*;
 import org.apache.commons.math3.distribution.*;
-import org.apache.commons.math3.util.Pair;
+import org.apache.commons.math3.util.*;
 import org.opt4j.core.*;
 import org.opt4j.core.common.random.*;
 import org.opt4j.core.config.annotations.*;
 import org.opt4j.core.optimizer.*;
 import org.opt4j.core.start.*;
 
+import java.util.*;
+import java.util.stream.*;
+
 /**
  * The {@link BeeColonyOptimizer} is an implementation of the Artificial Bee Colony Algorithm.
+ *
+ * @author Markus Reiter
+ * @author Michael Kaltschmid
  */
 @Info("Artificial Bee Colony Algorithm")
 public
 class BeeColonyOptimizer implements IterativeOptimizer {
-  private final Population population;
-  private final FoodSourceFactory foodSourceFactory;
   protected final IndividualCompleter completer;
   protected final Rand random;
-
   protected final int populationSize;
   protected final double alpha;
   protected final int limit;
+  private final Population population;
+  private final FoodSourceFactory foodSourceFactory;
   public Object next;
 
   protected List<Bee> employedBees = new ArrayList<>();
@@ -43,7 +45,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
     @Constant(value = "alpha", namespace = BeeColonyOptimizer.class) double alpha,
     @Constant(value = "limit", namespace = BeeColonyOptimizer.class) int limit) {
     this.population = population;
-    this.foodSourceFactory = (FoodSourceFactory)individualFactory;
+    this.foodSourceFactory = (FoodSourceFactory) individualFactory;
     this.completer = completer;
     this.random = random;
     this.populationSize = populationSize;
@@ -70,9 +72,9 @@ class BeeColonyOptimizer implements IterativeOptimizer {
    * Generate a new {@link FoodSource} starting from a given {@link FoodSource} and
    * a random {@link FoodSource} chosen from a list of {@link FoodSource}s.
    *
-   * @param foodSource   the starting food source
-   * @param foodSources  the list of all available food sources
-   * @return             a new food source
+   * @param foodSource  the starting food source
+   * @param foodSources the list of all available food sources
+   * @return a new food source
    */
   FoodSource generateRandomFoodSource(FoodSource foodSource, List<FoodSource> foodSources) {
     while (true) {
@@ -95,7 +97,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
   void employedBeesPhase() throws TerminationException {
     var foodSources = this.population.stream().map(f -> (FoodSource) f).collect(Collectors.toList());
 
-    for (var bee: this.employedBees) {
+    for (var bee : this.employedBees) {
       findBetterFoodSource(bee, foodSources);
     }
   }
@@ -107,7 +109,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
    *
    * @throws TerminationException
    */
-  void onlookerBeesPhase () throws TerminationException {
+  void onlookerBeesPhase() throws TerminationException {
     var foodSources = this.employedBees.stream().map(bee -> bee.getMemory()).collect(Collectors.toList());
 
     var fitnesses = foodSources.stream().map(foodSource -> foodSource.fitness()).collect(Collectors.toList());
@@ -118,7 +120,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
       return new Pair(this.employedBees.get(i), probability);
     }).collect(Collectors.toList()));
 
-    for (var onlookerBee: this.onlookerBees) {
+    for (var onlookerBee : this.onlookerBees) {
       var bee = distribution.sample();
       findBetterFoodSource(bee, foodSources);
     }
@@ -130,8 +132,8 @@ class BeeColonyOptimizer implements IterativeOptimizer {
    * of its memorized {@link FoodSource} and greedily choosing the {@link FoodSource} with the better
    * fitness. Additionally, if the new {@link FoodSource} is better, mark the old one for abandonment.
    *
-   * @param bee          the employed bee
-   * @param foodSources  the list of food sources to choose from
+   * @param bee         the employed bee
+   * @param foodSources the list of food sources to choose from
    * @throws TerminationException
    */
   private void findBetterFoodSource(Bee bee, List<FoodSource> foodSources) throws TerminationException {
@@ -156,7 +158,7 @@ class BeeColonyOptimizer implements IterativeOptimizer {
    * then look for random new food sources to replace abandoned ones.
    */
   void scoutBeesPhase() throws TerminationException {
-    for (var bee: this.employedBees) {
+    for (var bee : this.employedBees) {
       var foodSource = bee.getMemory();
 
       // If the abandonment limit for a food source is reached,
