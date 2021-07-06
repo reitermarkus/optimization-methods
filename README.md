@@ -1,12 +1,11 @@
 # Optimization Methods [![Code Coverage](https://codecov.io/gh/reitermarkus/optimization-methods/branch/main/graph/badge.svg)](https://codecov.io/github/reitermarkus/optimization-methods)
 
 
-
 ## Algorithms
 
 ### Firefly Swarm Optimization
 
-Implementation of the [firefly algorithm](https://en.wikipedia.org/wiki/Firefly_algorithm) by Yang et al. 
+Implementation of the [Firefly algorithm](https://en.wikipedia.org/wiki/Firefly_algorithm) by Xin-She Yang et al.
 
 To run this algorithm on the DTLZ1 problem, use:
 
@@ -16,7 +15,7 @@ To run this algorithm on the DTLZ1 problem, use:
 
 ### Bee Colony Optimization
 
-Implementation of the [Artificial Bee Colony](http://www.scholarpedia.org/article/Artificial_bee_colony_algorithm) algorithm by Dervis Karaboga. 
+Implementation of the [Artificial Bee Colony algorithm](http://www.scholarpedia.org/article/Artificial_bee_colony_algorithm) by Dervis Karaboga.
 
 To run this algorithm on the TSP problem, use:
 
