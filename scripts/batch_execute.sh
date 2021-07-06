@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# repeatedly run firefly/reference algorithm and log results to outputs directory 
+# repeatedly run firefly/reference/bee algorithm and log results to outputs directory 
 # used for evaluating/comparing algorithms
 
-alg="reference_tsp" # firefly_dtlz, reference_dtlz, beecolony_tsp, reference_tsp
+alg="reference_dtlz" # firefly_dtlz, reference_dtlz, beecolony_tsp, reference_tsp
 
 file="scripts/${alg}.xml"
 for num in {0..10}; do

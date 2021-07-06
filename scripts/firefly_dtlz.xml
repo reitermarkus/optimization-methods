@@ -8,7 +8,7 @@
     <property name="encoding">DOUBLE</property>
     <property name="bits">30</property>
   </module>
-  <module class="at.uibk.dps.optfund.dtlz.FireflyAlgorithmModule">
+  <module class="at.uibk.dps.optfund.dtlz.firefly.FireflyAlgorithmModule">
     <property name="generations">275</property>
     <property name="populationSize">50</property>
     <property name="alpha">0.001</property>
